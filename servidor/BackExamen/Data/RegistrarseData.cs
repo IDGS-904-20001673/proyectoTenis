@@ -34,7 +34,9 @@ namespace tenis.Data
                     cmd.Parameters.Add(new SqlParameter("@contrasenia", System.Data.SqlDbType.VarChar)).Value = usuario.Contrasenia;
                     cmd.Parameters.Add(new SqlParameter("@idRole", System.Data.SqlDbType.Int)).Value = usuario.IdRole;
 
-                    return "Se ah registrado un usuario de forma exitosa";
+                    int rowsAffected = cmd.ExecuteNonQuery();
+                    return rowsAffected > 0;
+
                 }
                 catch (Exception e)
                 {
