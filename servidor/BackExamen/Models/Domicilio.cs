@@ -2,7 +2,6 @@
 {
     public class Domicilio
     {
-        public int? DomicilioId { get; set; }
         public string? Estado { get; set; }
         public string? Municipio { get; set; }
         public int? CodigoPostal { get; set; }

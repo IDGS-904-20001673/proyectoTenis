@@ -31,11 +31,9 @@ namespace serverTenis.Data
                         {
                             Usuario user = new Usuario()
                             {
-                                Id = Convert.ToInt32(dr["id"]),
                                 Nombre = dr["nombre"].ToString(),
                                 Correo = dr["correo"].ToString(),
                                 Contrasenia = dr["contrasenia"].ToString(),
-                                Estatus =  Convert.ToInt16(dr["estatus"]),
                                 IdRole =  Convert.ToInt32(dr["idRole"]),
                                 Domicilio = new Domicilio()
                                 {

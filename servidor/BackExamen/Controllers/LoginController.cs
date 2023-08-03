@@ -2,6 +2,8 @@
 using BackExamen.Services;
 using Microsoft.AspNetCore.Mvc;
 using serverTenis.Data;
+using serverTenis.Models;
+using tenis.Data;
 
 namespace BackExamen.Controllers
 {
@@ -25,12 +27,28 @@ namespace BackExamen.Controllers
             
           
         }
+
+
+
+        [HttpPost]
+        [Route("Registrase")]
+        public dynamic Registrarse([FromBody] Usuario usuario )
+        {
+          
+            return RegistrarseData.Registrar(usuario);
+
+
+        }
+
+
     }
     public class LoginRequestModel
     {
         public string Email { get; set; }
         public string Password { get; set; }
     }
+
+
 
 }
 
