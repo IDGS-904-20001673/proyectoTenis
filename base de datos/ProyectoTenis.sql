@@ -24,7 +24,7 @@ CREATE TABLE domicilio(
 
 GO
 CREATE TABLE usuario (
-  id int NOT NULL PRIMARY KEY IDENTITY(1,1),
+  idUsuario int NOT NULL PRIMARY KEY IDENTITY(1,1),
   nombre varchar(50) NOT NULL,
   correo varchar(255) DEFAULT NULL,
   contrasenia varchar(255) NOT NULL,
@@ -133,7 +133,18 @@ insert into provedores(nombreProvedor,materiaPrima,costo) values(
 );
 END;
 GO
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+CREATE PROCEDURE sp_verificar_correo_existente
+    @correo VARCHAR(100)
+AS
+BEGIN
+    IF EXISTS (SELECT 1 FROM usuario WHERE correo = @correo)
+        SELECT 1 AS correo_existente;
+    ELSE
+        SELECT 0 AS correo_existente;
+END
 
+exec sp_verificar_correo_existente @correo=string2;
 
 --------------------------------------------------------------Ejecucion de los SP---------------------------------------------------------------------------------------------------------------------------------------------------------------
 EXEC sp_registrar_usuario
@@ -160,6 +171,8 @@ GO
 select * from usuario; 
 select * from domicilio; 
 select * from provedores; 
+
+
 
 
 

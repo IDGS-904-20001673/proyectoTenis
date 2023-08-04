@@ -31,7 +31,7 @@ namespace tenis.Data
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine("Error al registrar un provedor: " + e.Message);
+                    return "Error al registrar un provedor hablale al programador, pinche imbecil: " + e.Message;
                     throw;
                 }
                 finally

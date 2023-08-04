@@ -15,7 +15,10 @@ namespace serverTenis.Data
 
             using (SqlConnection oConexion = new SqlConnection(Conexion.rutaCon))
             {
-                oConexion.Open();
+
+                try
+                {
+                    oConexion.Open();
 
                 SqlCommand cmd = new SqlCommand("sp_consultar_usuario", oConexion);
                 cmd.CommandType = System.Data.CommandType.StoredProcedure;
@@ -23,8 +26,6 @@ namespace serverTenis.Data
                 cmd.Parameters.Add(new SqlParameter("@email", System.Data.SqlDbType.VarChar)).Value = correo;
                 cmd.Parameters.Add(new SqlParameter("@pass", System.Data.SqlDbType.VarChar)).Value = contrasenia;
 
-                try
-                {
                     using (SqlDataReader dr = cmd.ExecuteReader())
                     {
                         while (dr.Read())
@@ -55,11 +56,19 @@ namespace serverTenis.Data
                         }
                     }
 
-                    return usuarios;
+                    if (usuarios.Count >0)
+                    {
+                        return usuarios;
+                    }
+                    else {
+                        return "Fallo en el inicio de sesion";
+                    }
+
+                    
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine("Error al iniciar sesion: " + e.Message);
+                    return "Error al iniciar sesion hablale al programador, pinche imbecil: \": " + e.Message;
                     throw;
                 }
                 finally
