@@ -16,8 +16,7 @@ namespace BackExamen.Controllers
         [Route("login")]
         public dynamic Login([FromBody] LoginRequestModel log)
         {
-            LoginData.login(log.Password, log.Email);
-            if (LoginData.login(log.Password, log.Email) == null)
+            if (LoginData.login(log.Password, log.Email) == false)
             {
                 return BadRequest("Datos de inicio de sesión inválidos");
             }
@@ -33,10 +32,8 @@ namespace BackExamen.Controllers
         [HttpPost]
         [Route("Registrase")]
         public dynamic Registrarse([FromBody] Usuario usuario )
-        {
-          
+        {          
             return RegistrarseData.Registrar(usuario);
-
 
         }
 

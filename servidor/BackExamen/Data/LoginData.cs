@@ -11,13 +11,13 @@ namespace serverTenis.Data
 
         public static dynamic login(string contrasenia, string correo)
         {
-            List<Usuario> usuarios = new List<Usuario>();
+            List<UsuarioID> usuarios = new List<UsuarioID>();
 
             using (SqlConnection oConexion = new SqlConnection(Conexion.rutaCon))
             {
                 oConexion.Open();
 
-                SqlCommand cmd = new SqlCommand("consultar_usuario", oConexion);
+                SqlCommand cmd = new SqlCommand("sp_consultar_usuario", oConexion);
                 cmd.CommandType = System.Data.CommandType.StoredProcedure;
 
                 cmd.Parameters.Add(new SqlParameter("@email", System.Data.SqlDbType.VarChar)).Value = correo;
@@ -29,8 +29,9 @@ namespace serverTenis.Data
                     {
                         while (dr.Read())
                         {
-                            Usuario user = new Usuario()
+                            UsuarioID user = new UsuarioID()
                             {
+                                IdUsuario=Convert.ToInt32(dr["idUsuario"]),
                                 Nombre = dr["nombre"].ToString(),
                                 Correo = dr["correo"].ToString(),
                                 Contrasenia = dr["contrasenia"].ToString(),

@@ -36,6 +36,16 @@ CREATE TABLE usuario (
   CONSTRAINT fk_domiclio_id FOREIGN KEY (domicilioId) REFERENCES domicilio(domicilioId),
   CONSTRAINT fk_rol_id FOREIGN KEY (idRole) REFERENCES roles(idRole)
 );
+GO
+CREATE TABLE provedores(
+	proovedoresId int NOT NULL PRIMARY KEY IDENTITY(1,1),
+	nombreProvedor varchar(255) NOT NULL,
+	materiaPrima varchar(255) NOT NULL,
+	costo float NOT NULL,
+	estatus int NOT NULL DEFAULT 1
+);
+GO
+
 ---------------------------------------------------------------------------------------------inserciones------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 GO
 INSERT INTO roles (nombre, descripccion) VALUES
@@ -109,6 +119,22 @@ insert into usuario(nombre,correo, contrasenia, idRole, domicilioId) values(
 
 END;
 GO
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+CREATE PROCEDURE sp_insertar_proveedor(
+    @nombreP varchar(250),
+    @materiPrima varchar(250),
+	@costo float
+	)
+AS   
+BEGIN
+insert into provedores(nombreProvedor,materiaPrima,costo) values(
+@nombreP, @materiPrima, @costo
+);
+END;
+GO
+
+
 --------------------------------------------------------------Ejecucion de los SP---------------------------------------------------------------------------------------------------------------------------------------------------------------
 EXEC sp_registrar_usuario
     @estado='Guanajuato',
@@ -124,8 +150,18 @@ EXEC sp_registrar_usuario
     @contrasenia='leonel2002',
     @idRole=1;
 
+
+EXEC sp_insertar_proveedor
+    @nombreP='Portal',
+    @materiPrima='Calsetin',
+    @costo=60;
+GO
+--------------------------------selects------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 select * from usuario; 
 select * from domicilio; 
+select * from provedores; 
+
+
 
 
 
