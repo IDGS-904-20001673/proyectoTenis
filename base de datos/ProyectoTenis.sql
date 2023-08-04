@@ -2,6 +2,7 @@ create database tenis;
 GO
 use tenis;
 GO
+-------------------------------------------------------------------------------------------------------------creacion de las tablas--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 CREATE TABLE roles (
   idRole int NOT NULL IDENTITY(1,1) PRIMARY KEY ,
   nombre varchar(80) DEFAULT NULL,
@@ -29,13 +30,13 @@ CREATE TABLE usuario (
   contrasenia varchar(255) NOT NULL,
   estatus tinyint DEFAULT 1,
   fecha_creacion datetime DEFAULT GETDATE(),
-  idRole INT not null default 4,
+  idRole INT not null default 3,
   UNIQUE (correo),
   domicilioId int NOT NULL,
   CONSTRAINT fk_domiclio_id FOREIGN KEY (domicilioId) REFERENCES domicilio(domicilioId),
   CONSTRAINT fk_rol_id FOREIGN KEY (idRole) REFERENCES roles(idRole)
 );
-
+---------------------------------------------------------------------------------------------inserciones------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 GO
 INSERT INTO roles (nombre, descripccion) VALUES
 ('Admin', 'administrador'),
@@ -57,6 +58,10 @@ VALUES
 ('Jose', 'angro1212@gmail.com', 'sha256$6j2avdMEX7UgH3HT$a9ea793320d38ead008540397c27054079389b76e12ab9b99da9568af83b5e53',1,2,2),
 ('pedro', 'LeoGuapo@gmail.com', 'sha256$ERUhmMIzpUKtOSw4$eddbb4db44c30094412ebfebdfe42db31de476ae19d75d41193bf281325048a0',1,3,3);
 
+
+
+
+-------------------------------------------------------------------------------------Store procedures-------------------------------------------------------------------------------------------------------------------------------------------------------------------
 GO
 CREATE PROCEDURE sp_consultar_usuario(
     @email varchar(255),
@@ -70,6 +75,7 @@ usuario.domicilioId = domicilio.domicilioId
 where usuario.correo like @email and usuario.contrasenia like @pass;
 END;
 GO
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 CREATE PROCEDURE sp_registrar_usuario(
     @estado varchar(255),
@@ -103,7 +109,7 @@ insert into usuario(nombre,correo, contrasenia, idRole, domicilioId) values(
 
 END;
 GO
-
+--------------------------------------------------------------Ejecucion de los SP---------------------------------------------------------------------------------------------------------------------------------------------------------------
 EXEC sp_registrar_usuario
     @estado='Guanajuato',
     @municipio='Leon',
