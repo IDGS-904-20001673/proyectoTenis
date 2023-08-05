@@ -13,13 +13,30 @@ namespace tenis.Controllers
     {
         [HttpPost]
         [Route("RegistroProvedor")]
-        public dynamic Login([FromBody] Provedor pro)
+        public dynamic RegistarProveedor([FromBody] Provedor pro)
         {
 
                 return ProveedoresData.RegistrarProvedor(pro);
             }
 
 
+        [HttpPost]
+        [Route("EstatusProveedor")]
+        public dynamic EstatusProveedor([FromBody] int id)
+        {
+
+            return ProveedoresData.BajaProvedor(id);
         }
+
+
+        [HttpPost]
+        [Route("MostrarProveedores")]
+        public dynamic EstatusProveedor()
+        {
+
+            return ProveedoresData.MostarProvedores();
+        }
+
+    }
     }
 
