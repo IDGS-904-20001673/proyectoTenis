@@ -43,27 +43,30 @@ GO
 CREATE TABLE provedores(
 	proovedoresId int NOT NULL PRIMARY KEY IDENTITY(1,1),
 	nombreProvedor varchar(255) NOT NULL,
-	materiaPrima varchar(255) NOT NULL,
-	costo float NOT NULL,
+	telefono varchar(255) NOT NULL,
 	estatus int NOT NULL DEFAULT 1
+);
+GO
+
+
+CREATE TABLE materiaPrima (
+  materiaPrimaId int NOT NULL PRIMARY KEY IDENTITY(1,1),
+  proovedoresId int NOT NULL,
+  nombreMateriaPrima varchar(255)NOT NULL,
+  cantidadTotal int NOT NULL,
+  costo float NOT NULL,
+  image_name varchar(255) DEFAULT NULL,
+  CONSTRAINT fk_proovedores_proovedoresId FOREIGN KEY (proovedoresId) REFERENCES provedores(proovedoresId)
 );
 GO
 
 CREATE TABLE compraMateriaPrima(
 	compraMateriaPrimaID int NOT NULL PRIMARY KEY IDENTITY(1,1),
-	proovedoresId int NOT NULL,
-	cantidad int NOT NULL,
-	pagoTotal int NOT NULL,
+	materiaPrimaId int NOT NULL,
+	cantidadCompra int NOT NULL,
+	pagoTotal float NOT NULL,
 	fecha datetime DEFAULT GETDATE(),
-	CONSTRAINT fk_proovedores_proovedoresId FOREIGN KEY (proovedoresId) REFERENCES provedores(proovedoresId),
-);
-GO
-
-CREATE TABLE materiaPrima (
-  materiaPrimaId int NOT NULL PRIMARY KEY IDENTITY(1,1),
-  image_name varchar(255) DEFAULT NULL,
-  nombreMateriaPrima varchar(255)NOT NULL,
-  cantidad int NOT NULL
+	CONSTRAINT fk_materiaPrima_materiaPrimaId FOREIGN KEY (materiaPrimaId) REFERENCES materiaPrima(materiaPrimaId)
 );
 GO
 
@@ -138,18 +141,16 @@ insert into usuario(nombre,correo, contrasenia, idRole, domicilioId) values(
 );
 
 END;
-GO
-
+GO 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 CREATE PROCEDURE sp_insertar_proveedor(
-    @nombreP varchar(250),
-    @materiPrima varchar(250),
-	@costo float
+    @nombreP varchar(255),
+    @telefono varchar(255)
 	)
 AS   
 BEGIN
-insert into provedores(nombreProvedor,materiaPrima,costo) values(
-@nombreP, @materiPrima, @costo
+insert into provedores(nombreProvedor,telefono ) values(
+@nombreP, @telefono
 );
 END;
 GO
@@ -184,14 +185,64 @@ BEGIN
 END;
 GO
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-CREATE PROCEDURE sp_mostar_proveedores
+CREATE PROCEDURE sp_mostar_proveedores_todos
 AS
 BEGIN
 select * from provedores;
 
 END;
 GO
--------------------------------------------------------------------------------------------------------Ejecucion de los SP---------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+CREATE PROCEDURE sp_mostar_proveedores_activos
+AS
+BEGIN
+select * from provedores where estatus = 1;
+
+END;
+GO
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+CREATE PROCEDURE sp_Nueva_materiaPrima(
+    @proovedoresId int,
+    @nombreMateriaPrima varchar(255),
+    @costo float,
+    @image_name varchar(255)
+)
+AS   
+BEGIN
+
+        INSERT INTO materiaPrima (proovedoresId, nombreMateriaPrima, cantidadTotal, costo, image_name)
+        VALUES (@proovedoresId, @nombreMateriaPrima, 0, @costo, @image_name);
+END;
+GO
+
+CREATE PROCEDURE sp_mostrar_materiaPrima
+AS   
+BEGIN
+
+select * from materiaPrima;
+END;
+GO
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+CREATE PROCEDURE sp_comprar_materiaPrima(
+    @materiaPrimaId int,
+    @cantidadCompra int,
+    @pagoTotal float
+	)
+AS   
+BEGIN
+
+insert into compraMateriaPrima(materiaPrimaId, cantidadCompra, pagoTotal) values(
+@materiaPrimaId, @cantidadCompra, @pagoTotal
+);
+
+ UPDATE materiaPrima
+    SET cantidadTotal = cantidadTotal + @cantidadCompra
+    WHERE materiaPrimaId = @materiaPrimaId;
+
+END;
+GO
+-------------------------------------------------------------------------------------------------------Ejecucion de los SP----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 EXEC sp_registrar_usuario
     @estado='Guanajuato',
     @municipio='Leon',
@@ -205,18 +256,34 @@ EXEC sp_registrar_usuario
     @correo='robledo@gmail.com',
     @contrasenia='leonel2002',
     @idRole=1;
-
+GO
 
 EXEC sp_insertar_proveedor
-    @nombreP='Portal',
-    @materiPrima='Calsetin',
-    @costo=60;
+    @nombreP='cyprus',
+    @telefono='477123873'
+GO
+EXEC sp_insertar_proveedor
+    @nombreP='toefl',
+    @telefono='4771276873'
+GO
+EXEC sp_nueva_materiaPrima
+    @proovedoresId = 1,
+    @nombreMateriaPrima = 'Suelas',
+    @costo = 517.20,
+	@image_name = 'C:\Users\roble_p4xiojp\OneDrive\Escritorio\proyecto\base de datos'
+GO
+
+exec sp_comprar_materiaPrima @materiaPrimaId=1, @cantidadCompra=25, @pagoTotal=23.362;
+GO
+exec sp_comprar_materiaPrima @materiaPrimaId=1, @cantidadCompra=51, @pagoTotal=233.62;
+
 GO
 --------------------------------------------------------------------------------------selects------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 select * from usuario; 
 select * from domicilio; 
 select * from provedores; 
-
+select * from materiaPrima;
+select * from compraMateriaPrima;
 
 
 

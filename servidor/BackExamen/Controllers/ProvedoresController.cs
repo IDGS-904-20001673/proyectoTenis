@@ -12,7 +12,7 @@ namespace tenis.Controllers
     public class ProvedoresController
     {
         [HttpPost]
-        [Route("RegistroProvedor")]
+        [Route("RegistrarProvedor")]
         public dynamic RegistarProveedor([FromBody] Provedor pro)
         {
 
@@ -21,7 +21,7 @@ namespace tenis.Controllers
 
 
         [HttpPost]
-        [Route("EstatusProveedor")]
+        [Route("CambiarEstatusProveedor")]
         public dynamic EstatusProveedor([FromBody] int id)
         {
 
@@ -30,11 +30,19 @@ namespace tenis.Controllers
 
 
         [HttpPost]
-        [Route("MostrarProveedores")]
-        public dynamic EstatusProveedor()
+        [Route("MostrarTodosLosProveedores")]
+        public dynamic Proveedores()
         {
 
-            return ProveedoresData.MostarProvedores();
+            return ProveedoresData.MostarTodosProvedores();
+        }
+
+        [HttpPost]
+        [Route("MostrarProveedoresActivos")]
+        public dynamic ProveedoresAct()
+        {
+
+            return ProveedoresData.MostarProvedoresActivos();
         }
 
     }
