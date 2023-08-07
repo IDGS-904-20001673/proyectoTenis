@@ -41,7 +41,7 @@ namespace tenis.Data
         }
 
 
-        public static dynamic BajaProvedor(int idProvedor)
+        public static dynamic BajaProvedor(IdModel idProvedor)
         {
 
 
@@ -55,7 +55,7 @@ namespace tenis.Data
                     SqlCommand cmd = new SqlCommand("sp_baja_proveedor", oConexion);
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
 
-                    cmd.Parameters.Add(new SqlParameter("@id", System.Data.SqlDbType.VarChar)).Value = idProvedor;
+                    cmd.Parameters.Add(new SqlParameter("@id", System.Data.SqlDbType.Int)).Value = idProvedor.Id;
 
                     int rowsAffected = cmd.ExecuteNonQuery();
                     return "Se ah modificado el estado del proveedor";
