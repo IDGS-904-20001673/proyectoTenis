@@ -100,5 +100,64 @@ namespace tenis.Data
             }
         }
 
+        public static dynamic ActualizarUsuario(DomicilioI DomI)
+        {
+
+
+            using (SqlConnection oConexion = new SqlConnection(Conexion.rutaCon))
+            {
+
+                try
+                {
+                    oConexion.Open();
+
+               
+
+                        SqlCommand cmd = new SqlCommand("sp_atualizar_usuario", oConexion);
+                        cmd.CommandType = System.Data.CommandType.StoredProcedure;
+
+                        cmd.Parameters.Add(new SqlParameter("@idUsuario", System.Data.SqlDbType.Int)).Value = DomI.IdUsuario;
+
+                        cmd.Parameters.Add(new SqlParameter("@estado", System.Data.SqlDbType.VarChar)).Value = DomI.Estado;
+                        cmd.Parameters.Add(new SqlParameter("@municipio", System.Data.SqlDbType.VarChar)).Value = DomI.Municipio;
+                        cmd.Parameters.Add(new SqlParameter("@codigoPostal", System.Data.SqlDbType.Int)).Value = DomI.CodigoPostal;
+                        cmd.Parameters.Add(new SqlParameter("@colonia", System.Data.SqlDbType.VarChar)).Value = DomI.Colonia;
+                        cmd.Parameters.Add(new SqlParameter("@calle", System.Data.SqlDbType.VarChar)).Value = DomI.Calle;
+                        cmd.Parameters.Add(new SqlParameter("@numeroExt", System.Data.SqlDbType.Int)).Value = DomI.NumeroExt;
+
+                        if (DomI.NumeroInt == null || DomI.NumeroInt == 0)
+                        {
+                            cmd.Parameters.Add(new SqlParameter("@numeroInt", System.Data.SqlDbType.Int)).Value = DBNull.Value;
+                        }
+                        else
+                        {
+                            cmd.Parameters.Add(new SqlParameter("@numeroInt", System.Data.SqlDbType.Int)).Value = DomI.NumeroInt;
+                        }
+                        cmd.Parameters.Add(new SqlParameter("@referencia", System.Data.SqlDbType.VarChar)).Value = DomI.Referencia;
+
+
+                        int rowsAffected = cmd.ExecuteNonQuery();
+                        // Si se realizó correctamente, devolver un código de estado 200 OK
+                        return new HttpResponseMessage(HttpStatusCode.OK)
+                        {
+                            Content = new StringContent("Usuario actualizado correctamente")
+                        };
+
+                                  }
+                catch (Exception e)
+                {
+                    // Si ocurrió una excepción, devolver un código de estado 500 Internal Server Error
+                    return new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                    {
+                        Content = new StringContent("Error al actualizar, ponte en contacto con el guapo: " + e.Message)
+                    };
+                }
+                finally
+                {
+                    oConexion.Close();
+                }
+            }
+        }
+
     }
 }

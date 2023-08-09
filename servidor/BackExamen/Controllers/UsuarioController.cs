@@ -10,7 +10,7 @@ namespace BackExamen.Controllers
 
     [ApiController]
     [Route("tenis")]
-    public class LoginController : ControllerBase
+    public class UsuarioController : ControllerBase
     {
         [HttpPost]
         [Route("login")]
@@ -36,6 +36,17 @@ namespace BackExamen.Controllers
             return RegistrarseData.Registrar(usuario);
 
         }
+
+        [HttpPost]
+        [Route("ActualizarUsuario")]
+        public dynamic Actuzalizar([FromBody] DomicilioI DomI)
+        {
+            return RegistrarseData.ActualizarUsuario(DomI);
+
+        }
+
+
+
 
 
     }

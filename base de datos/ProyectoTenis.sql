@@ -1,3 +1,5 @@
+use master;
+GO
 DROP DATABASE IF EXISTS tenis;
 GO
 create database tenis;
@@ -291,6 +293,43 @@ BEGIN
 select * from productos where estatus = 1;
 END;
 GO
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+CREATE PROCEDURE sp_atualizar_usuario(
+  @idUsuario int,
+  @estado varchar(255) = NULL,
+  @municipio varchar(255) = NULL,
+  @codigoPostal int = NULL,
+  @colonia varchar(255) = NULL,
+  @calle varchar(255) = NULL,
+  @numeroExt int = NULL,
+  @numeroInt int = NULL,
+  @referencia varchar(255) = NULL
+)
+AS   
+BEGIN
+
+    DECLARE @iDomcilio int;
+
+    SELECT @iDomcilio = domicilioId FROM usuario WHERE idUsuario = @idUsuario;
+
+    IF @iDomcilio IS NOT NULL
+    BEGIN
+        UPDATE domicilio
+        SET
+            estado = CASE WHEN @estado IS NULL or @estado = '' THEN estado ELSE @estado END,
+            municipio = CASE WHEN @municipio IS NULL or @municipio = '' THEN municipio ELSE @municipio END,
+            codigoPostal = CASE WHEN @codigoPostal IS NULL or @codigoPostal = 0  THEN codigoPostal ELSE @codigoPostal END,
+            colonia = CASE WHEN @colonia IS NULL or @colonia = '' THEN colonia ELSE @colonia END,
+            calle = CASE WHEN @calle IS NULL or @calle = '' THEN calle ELSE @calle END,
+            numeroExt = CASE WHEN @numeroExt IS NULL or @numeroExt = 0 THEN numeroExt ELSE @numeroExt END,
+            numeroInt = CASE WHEN @numeroInt IS NULL or @numeroInt = 0 THEN numeroInt ELSE @numeroInt END,
+            referencia = CASE WHEN @referencia IS NULL or @referencia = '' THEN referencia ELSE @referencia END
+        WHERE domicilioId = @iDomcilio;
+    END;
+
+END;
+GO
 ------------------------------------------------------------------------Ejecucion de los SP-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 EXEC sp_registrar_usuario
     @estado='Guanajuato',
@@ -351,4 +390,14 @@ select * from productos;
     WHERE materiaPrimaId = 1;
 
 
+	EXEC sp_atualizar_usuario
+    @idUsuario=1,
+    @estado='sinaloa',
+    @municipio='Mazatlan',
+    @codigoPostal=null,
+    @colonia='',
+    @calle='',
+    @numeroExt=null,
+    @numeroInt=null,
+    @referencia='';
 
