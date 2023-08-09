@@ -14,9 +14,4 @@
         public string? Telefono { get; set; }
         public int Estatus { get; set; }
     }
-
-    public class IdModel
-    {
-        public int Id { get; set; }
-    }
 }

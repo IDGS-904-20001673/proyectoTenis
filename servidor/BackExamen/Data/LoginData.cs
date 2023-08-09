@@ -1,5 +1,5 @@
 ﻿using BackExamen.Data;
-using Newtonsoft.Json;
+using System.Net;
 using serverTenis.Models;
 using System.Data.SqlClient;
 
@@ -61,14 +61,20 @@ namespace serverTenis.Data
                         return usuarios;
                     }
                     else {
-                        return "Fallo en el inicio de sesion";
+                        return new HttpResponseMessage(HttpStatusCode.NotFound)
+                        {
+                            Content = new StringContent("Fallo en el inicio de sesion")
+                        }; 
                     }
 
                     
                 }
                 catch (Exception e)
                 {
-                    return "Error al iniciar sesion hablale al programador, pinche imbecil: \": " + e.Message;
+                    return new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                    {
+                        Content = new StringContent("Error al iniciar sesion hablale al programador, pinche imbecil:" + e.Message)
+                    }; 
                     throw;
                 }
                 finally

@@ -1,6 +1,7 @@
 ﻿using BackExamen.Data;
 using serverTenis.Models;
 using System.Data.SqlClient;
+using System.Net;
 using tenis.Models;
 
 namespace tenis.Data
@@ -25,13 +26,20 @@ namespace tenis.Data
                     cmd.Parameters.Add(new SqlParameter("@nombreP", System.Data.SqlDbType.VarChar)).Value = pro.Nombre;
                     cmd.Parameters.Add(new SqlParameter("@telefono", System.Data.SqlDbType.VarChar)).Value = pro.Telefono;
                     int rowsAffected = cmd.ExecuteNonQuery();
-                    return "proveedor insertado con exito";
+                    // Si se realizó correctamente, devolver un código de estado 200 OK
+                    return new HttpResponseMessage(HttpStatusCode.OK)
+                    {
+                        Content = new StringContent("Se ha agregado el proveedor")
+                    };
 
                 }
                 catch (Exception e)
                 {
-                    return "Error al registrar un provedor hablale al programador, pinche imbecil: " + e.Message;
-                    throw;
+                    // Si ocurrió una excepción, devolver un código de estado 500 Internal Server Error
+                    return new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                    {
+                        Content = new StringContent("Error al dar de alta el proveedor" + e.Message)
+                    };
                 }
                 finally
                 {
@@ -41,13 +49,10 @@ namespace tenis.Data
         }
 
 
-        public static dynamic BajaProvedor(IdModel idProvedor)
+        public static HttpResponseMessage BajaProvedor(int idProvedor)
         {
-
-
             using (SqlConnection oConexion = new SqlConnection(Conexion.rutaCon))
             {
-
                 try
                 {
                     oConexion.Open();
@@ -55,16 +60,34 @@ namespace tenis.Data
                     SqlCommand cmd = new SqlCommand("sp_baja_proveedor", oConexion);
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
 
-                    cmd.Parameters.Add(new SqlParameter("@id", System.Data.SqlDbType.Int)).Value = idProvedor.Id;
+                    cmd.Parameters.Add(new SqlParameter("@id", System.Data.SqlDbType.VarChar)).Value = idProvedor;
 
                     int rowsAffected = cmd.ExecuteNonQuery();
-                    return "Se ah modificado el estado del proveedor";
 
+                    if (rowsAffected > 0)
+                    {
+                        // Si se realizó correctamente, devolver un código de estado 200 OK
+                        return new HttpResponseMessage(HttpStatusCode.OK)
+                        {
+                            Content = new StringContent("Se ha modificado el estado del proveedor")
+                        };
+                    }
+                    else
+                    {
+                        // Si no se modificó nada, devolver un código de estado 404 Not Found
+                        return new HttpResponseMessage(HttpStatusCode.NotFound)
+                        {
+                            Content = new StringContent("El proveedor no fue encontrado o no se pudo modificar su estado")
+                        };
+                    }
                 }
                 catch (Exception e)
                 {
-                    return "Error al cambiar el estatus del proveedor, ponte en contacto con el guapo" + e.Message;
-                    throw;
+                    // Si ocurrió una excepción, devolver un código de estado 500 Internal Server Error
+                    return new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                    {
+                        Content = new StringContent("Error al cambiar el estado del proveedor. Ponte en contacto con el guapo: " + e.Message)
+                    };
                 }
                 finally
                 {
@@ -73,7 +96,7 @@ namespace tenis.Data
             }
         }
 
-        public static dynamic MostarTodosProvedores()
+        public static dynamic MostarProvedoresInActivos()
         {
 
             List<Provedore> prove = new List<Provedore>();
@@ -84,7 +107,7 @@ namespace tenis.Data
                 {
                     oConexion.Open();
 
-                    SqlCommand cmd = new SqlCommand("sp_mostar_proveedores_todos", oConexion);
+                    SqlCommand cmd = new SqlCommand("sp_mostar_proveedores_inactivos", oConexion);
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
 
 
@@ -111,13 +134,19 @@ namespace tenis.Data
                     }
                     else
                     {
-                        return "Error en la consulta de provedores";
+                        return new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                        {
+                            Content = new StringContent("Error en la consulta de provedores")
+                        }; 
                     }
 
                 }
                 catch (Exception e)
                 {
-                    return "Error al consultar los proveedores, ponte en contacto con el guapo" + e.Message;
+                    return new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                    {
+                        Content = new StringContent("Error al consultar los proveedores, ponte en contacto con el guapo" + e.Message)
+                    }; 
                     throw;
                 }
                 finally
@@ -165,13 +194,19 @@ namespace tenis.Data
                     }
                     else
                     {
-                        return "Error en la consulta de provedores";
+                        return new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                        {
+                            Content = new StringContent("Error en la consulta de provedores")
+                        }; 
                     }
 
                 }
                 catch (Exception e)
                 {
-                    return "Error al consultar los proveedores, ponte en contacto con el guapo " + e.Message;
+                    return new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                    {
+                        Content = new StringContent("Error al consultar los proveedores, ponte en contacto con el guapo " + e.Message)
+                    }; 
                     throw;
                 }
                 finally

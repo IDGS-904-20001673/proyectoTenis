@@ -20,22 +20,21 @@ namespace tenis.Controllers
             }
 
 
-
         [HttpPost]
-        [Route("CambiarEstatusProveedor")]
-        public dynamic EstatusProveedor([FromBody] IdModel id)
+        [Route("CambiarEstatusProveedor/{id}")]
+        public dynamic EstatusProveedor(int id)
         {
-
             return ProveedoresData.BajaProvedor(id);
         }
 
 
+
         [HttpPost]
-        [Route("MostrarTodosLosProveedores")]
-        public dynamic Proveedores()
+        [Route("MostrarProveedoresInActivos")]
+        public dynamic ProveedoresInAct()
         {
 
-            return ProveedoresData.MostarTodosProvedores();
+            return ProveedoresData.MostarProvedoresInActivos();
         }
 
         [HttpPost]
@@ -47,7 +46,5 @@ namespace tenis.Controllers
         }
 
     }
-
-
-}
+    }
 

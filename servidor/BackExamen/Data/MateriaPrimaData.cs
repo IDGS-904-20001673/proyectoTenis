@@ -2,6 +2,7 @@
 using serverTenis.Models;
 using System.Data.SqlClient;
 using System.Globalization;
+using System.Net;
 using tenis.Models;
 
 namespace tenis.Data
@@ -19,24 +20,34 @@ namespace tenis.Data
 
                 try
                 {
-                    int siExiste=0;
+                    int siExiste = 0;
                     oConexion.Open();
 
-                    dynamic provedores = ProveedoresData.MostarTodosProvedores();
+                    string consulta = "SELECT proovedoresId, estatus FROM provedores WHERE proovedoresId = @idProveedor";
+                    SqlCommand cmd1 = new SqlCommand(consulta, oConexion);
+                    cmd1.Parameters.AddWithValue("@idProveedor", MP.provedoresId);
 
-                    foreach (Provedore prove in provedores) {
-                        if (prove.idProveedor == MP.provedoresId && prove.Estatus == 1)
+                    using (SqlDataReader reader = cmd1.ExecuteReader())
+                    {
+                        while (reader.Read())
                         {
-                            siExiste=1;
-                            break;
-                        }
-                        else if (prove.idProveedor == MP.provedoresId && prove.Estatus == 0)
-                        {
-                            siExiste=2;
-                            break;
-                        }
-                        else {
-                            siExiste=3;
+                            int idProveedor = Convert.ToInt32(reader["proovedoresId"]);
+                            int estatus = Convert.ToInt32(reader["estatus"]);
+
+                            if (estatus == 1)
+                            {
+                                siExiste = 1;
+                                break;
+                            }
+                            else if (estatus == 0)
+                            {
+                                siExiste = 2;
+                                break;
+                            }
+                            else
+                            {
+                                siExiste = 3;
+                            }
                         }
                     }
 
@@ -50,28 +61,34 @@ namespace tenis.Data
                         cmd.Parameters.Add(new SqlParameter("@costo", System.Data.SqlDbType.Float)).Value = MP.costo; 
                         cmd.Parameters.Add(new SqlParameter("@image_name", System.Data.SqlDbType.VarChar)).Value = MP.image_name;
 
-
-
-
-                        // Agregar otros parámetros si es necesario
-
                         int rowsAffected = cmd.ExecuteNonQuery();
-                        return "Materia prima insertada con exito";
+                        return new HttpResponseMessage(HttpStatusCode.OK)
+                        {
+                            Content = new StringContent("Se ha agregado el proveedor")
+                        };
                     }
                     else if (siExiste == 2)
                     {
-                        return "No se pudo agregar la materia prima porque el proveedor esta dado de baja, dalo de alta e intentalo nuevamente";
+                        return new HttpResponseMessage(HttpStatusCode.Conflict)
+                        {
+                            Content = new StringContent("No se pudo agregar la materia prima porque el proveedor esta dado de baja, dalo de alta e intentalo nuevamente")
+                        };
                     }
-                    else { 
-                        return "No se pudo agregar la materia prima porque el proveedor No existe";
-
+                    else {
+                        return new HttpResponseMessage(HttpStatusCode.NotFound)
+                        {
+                            Content = new StringContent("No se pudo agregar la materia prima porque el proveedor No existe")
+                        };
                     }
 
 
                 }
                 catch (Exception e)
                 {
-                    return "Error al registrar la materia prima dile al leo: " + e.Message;
+                    return new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                    {
+                        Content = new StringContent("Error al registrar la materia prima dile al leo:")
+                    };
                     throw;
                 }
                 finally
@@ -122,13 +139,19 @@ namespace tenis.Data
                     }
                     else
                     {
-                        return "Error en la consulta de la materia prima";
+                         return new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                        {
+                            Content = new StringContent("Error en la consulta de la materia prima")
+                        };
                     }
 
                 }
                 catch (Exception e)
                 {
-                    return "Error al consultar la materia prima, ponte en contacto con el guapo" + e.Message;
+                    return new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                    {
+                        Content = new StringContent("Error al consultar la materia prima, ponte en contacto con el guapo" + e.Message)
+                    }; 
                     throw;
                 }
                 finally
@@ -179,13 +202,19 @@ namespace tenis.Data
                     }
                     else
                     {
-                        return "Error en la consulta de las compras de materia prima";
+                        return new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                        {
+                            Content = new StringContent("Error en la consulta de las compras de materia prima")
+                        }; 
                     }
 
                 }
                 catch (Exception e)
                 {
-                    return "Error al consultar las compras de materia prima, ponte en contacto con el guapo" + e.Message;
+                    return new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                    {
+                        Content = new StringContent("Error al consultar las compras de materia prima, ponte en contacto con el guapo" + e.Message)
+                    }; 
                     throw;
                 }
                 finally
@@ -233,11 +262,17 @@ namespace tenis.Data
                         cmd.Parameters.Add(new SqlParameter("@pagoTotal", System.Data.SqlDbType.Float)).Value = CMPI.pagoTotal;
 
                         int rowsAffected = cmd.ExecuteNonQuery();
-                        return "Compra de Materia prima realizada con exito con exito";
+                        return new HttpResponseMessage(HttpStatusCode.OK)
+                        {
+                            Content = new StringContent("Compra de Materia prima realizada con exito con exito")
+                        };
                     }
                     else
                     {
-                        return "No se pudo comprar la materia prima porque no existe, da de alta la meteria prima";
+                        return new HttpResponseMessage(HttpStatusCode.NotFound)
+                        {
+                            Content = new StringContent("No se pudo comprar la materia prima porque no existe, da de alta la meteria prima")
+                        };
 
                     }
 
@@ -245,7 +280,10 @@ namespace tenis.Data
                 }
                 catch (Exception e)
                 {
-                    return "Error al comprar la materia prima dile al guapo: " + e.Message;
+                    return new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                    {
+                        Content = new StringContent("Error al comprar la materia prima dile al guapo:")
+                    };
                     throw;
                 }
                 finally

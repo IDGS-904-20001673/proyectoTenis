@@ -185,10 +185,10 @@ BEGIN
 END;
 GO
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-CREATE PROCEDURE sp_mostar_proveedores_todos
+CREATE PROCEDURE sp_mostar_proveedores_inactivos
 AS
 BEGIN
-select * from provedores;
+select * from provedores where estatus = 0;
 
 END;
 GO
@@ -292,8 +292,6 @@ select * from domicilio;
 select * from provedores; 
 select * from materiaPrima;
 select * from compraMateriaPrima;
-
-
 
 
 

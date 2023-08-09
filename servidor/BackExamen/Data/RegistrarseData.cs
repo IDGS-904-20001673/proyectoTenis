@@ -1,5 +1,6 @@
 ﻿using BackExamen.Data;
 using serverTenis.Models;
+using System.Net;
 using System.Data.SqlClient;
 
 namespace tenis.Data
@@ -58,7 +59,7 @@ namespace tenis.Data
                         cmd.Parameters.Add(new SqlParameter("@contrasenia", System.Data.SqlDbType.VarChar)).Value = usuario.Contrasenia;
 
 
-                        if (usuario.Domicilio.NumeroInt == null || usuario.Domicilio.NumeroInt == 0)
+                        if (usuario.IdRole == null || usuario.IdRole == 0)
                         {
                             cmd.Parameters.Add(new SqlParameter("@idRole", System.Data.SqlDbType.Int)).Value = 3;
                         }
@@ -69,17 +70,28 @@ namespace tenis.Data
 
 
                         int rowsAffected = cmd.ExecuteNonQuery();
-                        return "Usuario insertado correctamente";
+                        // Si se realizó correctamente, devolver un código de estado 200 OK
+                        return new HttpResponseMessage(HttpStatusCode.OK)
+                        {
+                            Content = new StringContent("Usuario insertado correctamente")
+                        };
                     }
-                    else {
-                        return "Este correo ya esta en uso";
+                    else
+                    {
+                        // Si el correo ya existe, devolver un código de estado 409 Conflict
+                        return new HttpResponseMessage(HttpStatusCode.Conflict)
+                        {
+                            Content = new StringContent("Este correo ya está en uso")
+                        };
                     }
-
                 }
                 catch (Exception e)
                 {
-                    return "Error al Rgisttrar hablale al programador, pinche imbecil:" + e.Message;
-                    throw;
+                    // Si ocurrió una excepción, devolver un código de estado 500 Internal Server Error
+                    return new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                    {
+                        Content = new StringContent("Error al registrar, ponte en contacto con el guapo: " + e.Message)
+                    };
                 }
                 finally
                 {
