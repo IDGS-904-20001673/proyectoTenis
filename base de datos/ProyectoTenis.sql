@@ -53,7 +53,7 @@ CREATE TABLE materiaPrima (
   materiaPrimaId int NOT NULL PRIMARY KEY IDENTITY(1,1),
   proovedoresId int NOT NULL,
   nombreMateriaPrima varchar(255)NOT NULL,
-  cantidadTotal int NOT NULL,
+  cantidadTotal float NOT NULL,
   costo float NOT NULL,
   image_name varchar(255) DEFAULT NULL,
   CONSTRAINT fk_proovedores_proovedoresId FOREIGN KEY (proovedoresId) REFERENCES provedores(proovedoresId)
@@ -70,6 +70,25 @@ CREATE TABLE compraMateriaPrima(
 );
 GO
 
+CREATE TABLE productos (
+  idProducto int NOT NULL PRIMARY KEY IDENTITY(1,1),
+  nombre varchar(255) NOT NULL,
+  precio float DEFAULT NULL,
+  descripccion varchar(255) DEFAULT NULL,
+  image_name varchar(255) DEFAULT NULL,
+  estatus int DEFAULT NULL
+);
+GO
+
+CREATE TABLE detalleMateriaProducto (
+  idDetalleProducto int NOT NULL PRIMARY KEY IDENTITY(1,1),
+  idProducto int NOT NULL,
+  materiaPrimaId int NOT NULL,
+  cantidadUsoMateria float NOT NULL,
+  CONSTRAINT fk_idProducto FOREIGN KEY (idProducto) REFERENCES productos(idProducto),
+  CONSTRAINT fk_detalleMateriaProducto_materiaPrimaId FOREIGN KEY (materiaPrimaId) REFERENCES materiaPrima(materiaPrimaId)
+);
+GO
 ---------------------------------------------------------------------------------------------inserciones------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 INSERT INTO roles (nombre, descripccion) VALUES
 ('Admin', 'administrador'),
@@ -250,7 +269,29 @@ BEGIN
 select * from compraMateriaPrima;
 END;
 GO
--------------------------------------------------------------------------------------------------------Ejecucion de los SP----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+CREATE PROCEDURE sp_productoNuevo(
+    @nombre varchar(255),
+	@precio float,
+    @descripccion varchar(255),
+    @image_name varchar(255)
+)
+AS   
+BEGIN
+
+        INSERT INTO productos(nombre, precio, descripccion, image_name, estatus )
+        VALUES (@nombre, @precio, @descripccion, @image_name, 1);
+END;
+GO
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+CREATE PROCEDURE sp_mostarProductosActivos
+AS   
+BEGIN
+select * from productos where estatus = 1;
+END;
+GO
+------------------------------------------------------------------------Ejecucion de los SP-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 EXEC sp_registrar_usuario
     @estado='Guanajuato',
     @municipio='Leon',
@@ -276,15 +317,26 @@ EXEC sp_insertar_proveedor
 GO
 EXEC sp_nueva_materiaPrima
     @proovedoresId = 1,
-    @nombreMateriaPrima = 'Suelas',
+    @nombreMateriaPrima = 'PVC',
     @costo = 517.20,
 	@image_name = 'C:\Users\roble_p4xiojp\OneDrive\Escritorio\proyecto\base de datos'
 GO
-
 exec sp_comprar_materiaPrima @materiaPrimaId=1, @cantidadCompra=25, @pagoTotal=23.362;
 GO
 exec sp_comprar_materiaPrima @materiaPrimaId=1, @cantidadCompra=51, @pagoTotal=233.62;
+GO
+EXEC sp_productoNuevo
+    @nombre='Tenis Dama',
+    @precio=500,
+    @descripccion='zapato bonito para dama',
+    @image_name='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSVr0o0FVrzqLrAQa-ivchzoLiZjksjphqopA&usqp=CAU';
+GO
 
+EXEC sp_productoNuevo
+    @nombre='Tenis Bato',
+    @precio=500,
+    @descripccion='zapato bonito para bato',
+    @image_name='https://http2.mlstatic.com/D_NQ_NP_605573-MLM44430900575_122020-O.webp';
 GO
 --------------------------------------------------------------------------------------selects------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 select * from usuario; 
@@ -292,8 +344,11 @@ select * from domicilio;
 select * from provedores; 
 select * from materiaPrima;
 select * from compraMateriaPrima;
+select * from productos;
 
-
+  UPDATE materiaPrima
+    SET cantidadTotal = cantidadTotal-0.05
+    WHERE materiaPrimaId = 1;
 
 
 
