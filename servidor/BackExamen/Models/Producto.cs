@@ -23,6 +23,13 @@
         public int idProducto { get; set; }
     }
 
+    public class ProductoDetaPuntos
+    {
+        public int idProducto { get; set; }
+        public double punto { get; set; }
+    }
+
+
 
 
 

@@ -200,7 +200,7 @@ namespace tenis.Data
                     }
                     else
                     {
-                        
+
                         return new HttpResponseMessage(HttpStatusCode.NotFound)
                         {
                             Content = new StringContent("No se pudo modificar el estatus de este producto")
@@ -209,7 +209,7 @@ namespace tenis.Data
                 }
                 catch (Exception e)
                 {
-         
+
                     return new HttpResponseMessage(HttpStatusCode.InternalServerError)
                     {
                         Content = new StringContent("Error al cambiar el estado del producto: " + e.Message)
@@ -221,6 +221,48 @@ namespace tenis.Data
                 }
             }
         }
+
+
+        public static dynamic RegistrarPuntosProducto(ProductoDetaPuntos P)
+        {
+
+
+            using (SqlConnection oConexion = new SqlConnection(Conexion.rutaCon))
+            {
+
+                try
+                {
+                    oConexion.Open();
+
+                    SqlCommand cmd = new SqlCommand("sp_ProductoDetalle", oConexion);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+
+                    cmd.Parameters.Add(new SqlParameter("@idProducto", System.Data.SqlDbType.Int)).Value = P.idProducto;
+                    cmd.Parameters.Add(new SqlParameter("@punto", System.Data.SqlDbType.Float)).Value = P.punto;
+
+                    int rowsAffected = cmd.ExecuteNonQuery();
+                    return new HttpResponseMessage(HttpStatusCode.OK)
+                    {
+                        Content = new StringContent("Se ha agregado el punto")
+                    };
+
+
+                }
+                catch (Exception e)
+                {
+                    return new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                    {
+                        Content = new StringContent("Error al registrar el nuevo punto del producto")
+                    };
+                    throw;
+                }
+                finally
+                {
+                    oConexion.Close();
+                }
+            }
+        }
+
     }
 
 }

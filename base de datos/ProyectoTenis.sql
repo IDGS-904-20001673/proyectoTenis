@@ -1,4 +1,4 @@
-usejk master;
+use master;
 GO
 DROP DATABASE IF EXISTS tenis;
 GO
@@ -97,17 +97,17 @@ GO
 CREATE TABLE ProductoDetalle (
     ProductoDetalleID int NOT NULL PRIMARY KEY IDENTITY(1, 1),
     idProducto int NOT NULL,
-    punto int,
-    cantidad int ,
-    CONSTRAINT fk_idProducto_detalle FOREIGN KEY (idProducto) REFERENCES productos(idProducto),
+    punto float,
+    cantidad_STOCK int,
+    CONSTRAINT fk_idProducto_detalle FOREIGN KEY (idProducto) REFERENCES productos(idProducto)
 );
 
 CREATE TABLE detalleMateriaProducto (
   idDetalleMateriaProducto int NOT NULL PRIMARY KEY IDENTITY(1,1),
-  idProducto int NOT NULL,
+  ProductoDetalleID int NOT NULL,
   materiaPrimaId int NOT NULL,
   cantidadUsoMateria float NOT NULL,
-  CONSTRAINT fk_idProducto FOREIGN KEY (idProducto) REFERENCES productos(idProducto),
+  CONSTRAINT fk_detalleMateria_detalleProducto FOREIGN KEY (ProductoDetalleID) REFERENCES ProductoDetalle(ProductoDetalleID),
   CONSTRAINT fk_detalleMateriaProducto_materiaPrimaId FOREIGN KEY (materiaPrimaId) REFERENCES materiaPrima(materiaPrimaId)
 );
 GO
@@ -423,6 +423,33 @@ BEGIN
 
 END;
 GO
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+CREATE PROCEDURE sp_ProductoDetalle(
+    @idProducto int,
+    @punto float
+	)
+AS   
+BEGIN
+
+insert into ProductoDetalle(idProducto, punto, cantidad_STOCK) values
+(@idProducto, @punto, 0)
+
+END;
+GO
+------------------------------------------------------------------------------------------------------------------------------------------
+CREATE PROCEDURE sp_DetalleMateriaProducto(
+    @idProductoDetalle int,
+    @materiaPrimaId int,
+    @cantidadUsoMateria float
+	)
+AS   
+BEGIN
+
+insert into detalleMateriaProducto(ProductoDetalleID, materiaPrimaId, cantidadUsoMateria ) values
+(@idProductoDetalle, @materiaPrimaId, @cantidadUsoMateria)
+
+END;
+GO
 ------------------------------------------------------------------------Ejecucion de los SP-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 EXEC sp_registrar_usuario
     @estado='Guanajuato',
@@ -478,6 +505,9 @@ EXEC sp_productoNuevo
     @descripccion='zapato bonito para bato',
     @image_name='https://http2.mlstatic.com/D_NQ_NP_605573-MLM44430900575_122020-O.webp';
 GO
+
+EXEC sp_ProductoDetalle @idProducto = 1, @punto=3;
+GO
 --------------------------------------------------------------------------------------selects------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 select * from usuario; 
 select * from domicilio; 
@@ -485,6 +515,7 @@ select * from provedores;
 select * from materiaPrima;
 select * from compraMateriaPrima;
 select * from productos;
+select * from ProductoDetalle;
 
   UPDATE materiaPrima
     SET cantidadTotal = cantidadTotal-0.05
