@@ -19,9 +19,15 @@ namespace tenis.Controllers
         [Route("MostrarMateriaPrima")]
         public dynamic MostrarMateria()
         {
-            return MateriaPrimaData.MostarMateriaPrima();
+            return MateriaPrimaData.MostarTodaMateriaPrima();
         }
 
+        [HttpPost]
+        [Route("MostrarMateriaPrimaNormal")]
+        public dynamic MostrarMateriaNormal()
+        {
+            return MateriaPrimaData.MostarMateriaPrimaNormal();
+        }
 
         [HttpPost]
         [Route("MostrarComprasMateriaPrima")]

@@ -22,5 +22,19 @@ namespace tenis.Controllers
         {
             return ProductoData.MostrarProductosActivos();
         }
+
+        [HttpPost]
+        [Route("MostrarProductosInactivos")]
+        public dynamic MostrarProductosInActivos()
+        {
+            return ProductoData.MostrarProductosInActivos();
+        }
+
+        [HttpPost]
+        [Route("CambiarEstatusProducto")]
+        public dynamic CambiaEstatus([FromBody] ProductoId id)
+        {
+            return ProductoData.CambiarEstatusProducto(id);
+        }
     }
 }

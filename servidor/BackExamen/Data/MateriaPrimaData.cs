@@ -99,7 +99,7 @@ namespace tenis.Data
         }
 
 
-        public static dynamic MostarMateriaPrima()
+        public static dynamic MostarTodaMateriaPrima()
         {
 
             List<MateriaPrimaE> mate = new List<MateriaPrimaE>();
@@ -152,6 +152,68 @@ namespace tenis.Data
                     {
                         Content = new StringContent("Error al consultar la materia prima, ponte en contacto con el guapo" + e.Message)
                     }; 
+                    throw;
+                }
+                finally
+                {
+                    oConexion.Close();
+                }
+            }
+        }
+
+        public static dynamic MostarMateriaPrimaNormal()
+        {
+
+            List<MateriaPrimaE> mate = new List<MateriaPrimaE>();
+            using (SqlConnection oConexion = new SqlConnection(Conexion.rutaCon))
+            {
+
+                try
+                {
+                    oConexion.Open();
+
+                    SqlCommand cmd = new SqlCommand("sp_mostrar_materiaPrimaNormal", oConexion);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+
+
+                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        while (dr.Read())
+                        {
+                            MateriaPrimaE mp = new MateriaPrimaE()
+                            {
+                                materiaPrimaId =Convert.ToInt32(dr["materiaPrimaId"]),
+                                provedoresId=Convert.ToInt32(dr["proovedoresId"]),
+                                nombreMateriaPrima = dr["nombreMateriaPrima"].ToString(),
+                                cantidadTotal = Convert.ToInt32(dr["cantidadTotal"]),
+                                costo = Convert.ToDouble(dr["costo"]),
+                                image_name = dr["image_name"].ToString()
+
+                            };
+
+                            mate.Add(mp);
+                        }
+                    }
+
+                    if (mate.Count >0)
+                    {
+                        return mate;
+                    }
+                    else
+                    {
+                        return new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                        {
+                            Content = new StringContent("Error en la consulta de la materia prima")
+                        };
+                    }
+
+                }
+                catch (Exception e)
+                {
+                    return new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                    {
+                        Content = new StringContent("Error al consultar la materia prima, ponte en contacto con el guapo" + e.Message)
+                    };
                     throw;
                 }
                 finally
@@ -237,7 +299,7 @@ namespace tenis.Data
                     int siExiste = 0;
                     oConexion.Open();
 
-                    dynamic MP = MostarMateriaPrima();
+                    dynamic MP = MostarTodaMateriaPrima();
 
                     foreach (MateriaPrimaE MPE in MP)
                     {

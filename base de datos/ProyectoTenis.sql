@@ -1,4 +1,4 @@
-use master;
+usejk master;
 GO
 DROP DATABASE IF EXISTS tenis;
 GO
@@ -72,6 +72,18 @@ CREATE TABLE compraMateriaPrima(
 );
 GO
 
+CREATE TABLE compraMateriaPrimaPuntos(
+    compraMateriaPrimaPuntoID int NOT NULL PRIMARY KEY IDENTITY(10000, 1),
+    materiaPrimaId int NOT NULL,
+    cantidadCompra int NOT NULL,
+    punto float not null,
+    pagoTotal float NOT NULL,
+    fecha datetime DEFAULT GETDATE(),
+    CONSTRAINT fk_materiaPrimaPunto_materiaPrimaId FOREIGN KEY (materiaPrimaId) REFERENCES materiaPrima(materiaPrimaId)
+);
+
+GO
+
 CREATE TABLE productos (
   idProducto int NOT NULL PRIMARY KEY IDENTITY(1,1),
   nombre varchar(255) NOT NULL,
@@ -82,8 +94,16 @@ CREATE TABLE productos (
 );
 GO
 
+CREATE TABLE ProductoDetalle (
+    ProductoDetalleID int NOT NULL PRIMARY KEY IDENTITY(1, 1),
+    idProducto int NOT NULL,
+    punto int,
+    cantidad int ,
+    CONSTRAINT fk_idProducto_detalle FOREIGN KEY (idProducto) REFERENCES productos(idProducto),
+);
+
 CREATE TABLE detalleMateriaProducto (
-  idDetalleProducto int NOT NULL PRIMARY KEY IDENTITY(1,1),
+  idDetalleMateriaProducto int NOT NULL PRIMARY KEY IDENTITY(1,1),
   idProducto int NOT NULL,
   materiaPrimaId int NOT NULL,
   cantidadUsoMateria float NOT NULL,
@@ -91,6 +111,7 @@ CREATE TABLE detalleMateriaProducto (
   CONSTRAINT fk_detalleMateriaProducto_materiaPrimaId FOREIGN KEY (materiaPrimaId) REFERENCES materiaPrima(materiaPrimaId)
 );
 GO
+
 ---------------------------------------------------------------------------------------------inserciones------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 INSERT INTO roles (nombre, descripccion) VALUES
 ('Admin', 'administrador'),
@@ -213,7 +234,7 @@ select * from provedores where estatus = 0;
 
 END;
 GO
-
+----------------------------------------------------------------------------------------------------------------------
 CREATE PROCEDURE sp_mostar_proveedores_activos
 AS
 BEGIN
@@ -235,12 +256,28 @@ BEGIN
         VALUES (@proovedoresId, @nombreMateriaPrima, 0, @costo, @image_name);
 END;
 GO
-
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 CREATE PROCEDURE sp_mostrar_materiaPrima
 AS   
 BEGIN
 
 select * from materiaPrima;
+END;
+GO
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+CREATE PROCEDURE sp_mostrar_materiaPrimaNormal
+AS   
+BEGIN
+SELECT * FROM materiaPrima where nombreMateriaPrima Not like '%del%'
+END;
+GO
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+CREATE PROCEDURE sp_mostrar_materiaPrimaPuntos
+AS   
+BEGIN
+SELECT * FROM materiaPrima where nombreMateriaPrima like '%del%';
 END;
 GO
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -267,8 +304,15 @@ GO
 CREATE PROCEDURE sp_mostrar_comprasMateriaPrima
 AS   
 BEGIN
-
-select * from compraMateriaPrima;
+SELECT 
+    COALESCE(compraMateriaPrima.compraMateriaPrimaId  , compraMateriaPrimaPuntos.compraMateriaPrimaPuntoId) AS compraMateriaPrimaId,
+    COALESCE(compraMateriaPrima.materiaPrimaId, compraMateriaPrimaPuntos.materiaPrimaId) AS materiaPrimaId,
+    COALESCE(compraMateriaPrima.cantidadCompra, compraMateriaPrimaPuntos.cantidadCompra) AS cantidadCompra,
+    COALESCE(compraMateriaPrima.pagoTotal, compraMateriaPrimaPuntos.pagoTotal) AS pagoTotal,
+    COALESCE(compraMateriaPrima.fecha, compraMateriaPrimaPuntos.fecha) AS fecha
+FROM materiaPrima
+LEFT JOIN compraMateriaPrima ON materiaPrima.materiaPrimaId = compraMateriaPrima.materiaPrimaId
+LEFT JOIN compraMateriaPrimaPuntos ON materiaPrima.materiaPrimaId = compraMateriaPrimaPuntos.materiaPrimaId;
 END;
 GO
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -291,6 +335,14 @@ CREATE PROCEDURE sp_mostarProductosActivos
 AS   
 BEGIN
 select * from productos where estatus = 1;
+END;
+GO
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+CREATE PROCEDURE sp_mostarProductosInactivos
+AS   
+BEGIN
+select * from productos where estatus = 0;
 END;
 GO
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -330,6 +382,47 @@ BEGIN
 
 END;
 GO
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+CREATE PROCEDURE sp_comprar_materiaPrimaPunto(
+    @materiaPrimaId int,
+    @cantidadCompra int,
+    @pagoTotal float,
+	@punto int 
+	)
+AS   
+BEGIN
+
+insert into compraMateriaPrimaPuntos(materiaPrimaId, cantidadCompra, pagoTotal, punto) values(
+@materiaPrimaId, @cantidadCompra, @pagoTotal, @punto
+);
+
+ UPDATE materiaPrima
+    SET cantidadTotal = cantidadTotal + @cantidadCompra
+    WHERE materiaPrimaId = @materiaPrimaId;
+
+END;
+GO
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+create PROCEDURE sp_estatus_producto(
+    @idProducto int
+	)
+AS
+BEGIN
+
+	declare @esta int;
+
+    SELECT @esta = CASE WHEN estatus = 0 
+	THEN 1 
+	ELSE 0 
+	END FROM productos WHERE idProducto = @idProducto;
+
+
+	UPDATE productos
+    SET estatus = @esta
+    WHERE idProducto = @idProducto;
+
+END;
+GO
 ------------------------------------------------------------------------Ejecucion de los SP-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 EXEC sp_registrar_usuario
     @estado='Guanajuato',
@@ -360,9 +453,17 @@ EXEC sp_nueva_materiaPrima
     @costo = 517.20,
 	@image_name = 'C:\Users\roble_p4xiojp\OneDrive\Escritorio\proyecto\base de datos'
 GO
+EXEC sp_nueva_materiaPrima
+    @proovedoresId = 1,
+    @nombreMateriaPrima = 'Suela del 5',
+    @costo = 52.20,
+	@image_name = 'C:\Users\roble_p4xiojp\OneDrive\Escritorio\proyecto\base de datos'
+GO
 exec sp_comprar_materiaPrima @materiaPrimaId=1, @cantidadCompra=25, @pagoTotal=23.362;
 GO
 exec sp_comprar_materiaPrima @materiaPrimaId=1, @cantidadCompra=51, @pagoTotal=233.62;
+GO
+exec sp_comprar_materiaPrimaPunto @materiaPrimaId=2, @cantidadCompra=21, @pagoTotal=372.62, @punto=5;
 GO
 EXEC sp_productoNuevo
     @nombre='Tenis Dama',

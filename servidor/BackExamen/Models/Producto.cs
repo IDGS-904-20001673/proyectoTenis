@@ -18,5 +18,12 @@
         public int estatus { get; set; }
     }
 
+    public class ProductoId
+    {
+        public int idProducto { get; set; }
+    }
+
+
+
 
 }
