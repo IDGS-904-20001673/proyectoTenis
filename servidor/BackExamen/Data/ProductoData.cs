@@ -395,6 +395,70 @@ namespace tenis.Data
             }
         }
 
+        public static dynamic MostrarDetalleMateriaProductosPorPuntos(ProductoId prid)
+        {
+
+            List<ProductoId> pro = new List<ProductoId>();
+            using (SqlConnection oConexion = new SqlConnection(Conexion.rutaCon))
+            {
+
+                try
+                {
+                    oConexion.Open();
+
+                    SqlCommand cmd = new SqlCommand("sp_mostarProductosActivos", oConexion);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+
+
+                    cmd.Parameters.Add(new SqlParameter("@idProductoDetalle", System.Data.SqlDbType.Int)).Value = prid.idProducto;
+                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        while (dr.Read())
+                        {
+                            ProductoMateriaDetallePuntosID PE = new ProductoMateriaDetallePuntosID()
+                            {
+                                idDetalleMateriaProducto =Convert.ToInt32(dr["idProducto"]),
+                                idProductoDetalle=dr["nombre"].ToString(),
+                                precio = Convert.ToDouble(dr["precio"]),
+                                descripccion = dr["descripccion"].ToString(),
+                                image_name = dr["image_name"].ToString(),
+                                estatus = Convert.ToInt32(dr["estatus"])
+
+
+                            };
+
+                            pro.Add(PE);
+                        }
+                    }
+
+                    if (pro.Count >0)
+                    {
+                        return pro;
+                    }
+                    else
+                    {
+                        return new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                        {
+                            Content = new StringContent("Error en la consulta de los productos")
+                        };
+                    }
+
+                }
+                catch (Exception e)
+                {
+                    return new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                    {
+                        Content = new StringContent("Error al consultar los productos" + e.Message)
+                    };
+                    throw;
+                }
+                finally
+                {
+                    oConexion.Close();
+                }
+            }
+        }
+
     }
 
 }

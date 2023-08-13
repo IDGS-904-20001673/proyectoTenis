@@ -40,6 +40,13 @@
 
     public class ProductoMateriaDetallePuntos
     {
+        public int idProductoDetalle { get; set; }
+        public int materiaPrimaId { get; set; }
+        public double cantidadUsoMateria { get; set; }
+    }
+
+    public class ProductoMateriaDetallePuntosID
+    {
         public int idDetalleMateriaProducto { get; set; }
         public int idProductoDetalle { get; set; }
         public int materiaPrimaId { get; set; }

@@ -462,6 +462,17 @@ insert into detalleMateriaProducto(ProductoDetalleID, materiaPrimaId, cantidadUs
 
 END;
 GO
+------------------------------------------------------------------------------------------------------------------------------------------
+CREATE PROCEDURE sp_MostrarDetalleMateriaProducto(
+    @idProductoDetalle int
+	)
+AS   
+BEGIN
+
+select * from detalleMateriaProducto where ProductoDetalleID=@idProductoDetalle;
+
+END;
+GO
 ------------------------------------------------------------------------Ejecucion de los SP-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 EXEC sp_registrar_usuario
     @estado='Guanajuato',
