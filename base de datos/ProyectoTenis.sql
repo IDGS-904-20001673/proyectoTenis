@@ -437,6 +437,18 @@ insert into ProductoDetalle(idProducto, punto, cantidad_STOCK) values
 END;
 GO
 ------------------------------------------------------------------------------------------------------------------------------------------
+
+create PROCEDURE sp_mostrar_puntosProducto(
+    @idProducto int
+	)
+AS
+BEGIN
+    SELECT * from ProductoDetalle where idProducto = @idProducto;
+
+END;
+GO
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 CREATE PROCEDURE sp_DetalleMateriaProducto(
     @idProductoDetalle int,
     @materiaPrimaId int,
@@ -508,6 +520,8 @@ GO
 
 EXEC sp_ProductoDetalle @idProducto = 1, @punto=3;
 GO
+exec sp_DetalleMateriaProducto @idProductoDetalle=1, @materiaPrimaId=1, @cantidadUsoMateria=0.05;
+GO
 --------------------------------------------------------------------------------------selects------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 select * from usuario; 
 select * from domicilio; 
@@ -516,6 +530,7 @@ select * from materiaPrima;
 select * from compraMateriaPrima;
 select * from productos;
 select * from ProductoDetalle;
+select * from detalleMateriaProducto;
 
   UPDATE materiaPrima
     SET cantidadTotal = cantidadTotal-0.05
