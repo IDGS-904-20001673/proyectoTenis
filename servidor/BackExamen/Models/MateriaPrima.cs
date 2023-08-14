@@ -31,6 +31,8 @@ namespace tenis.Models
 
         public double pagoTotal { get; set; }
         public string fecha { get; set; }
+
+        public MateriaPrimaE materiaPrima { get; set; }
     }
 
     public class ComprasMateriaPrimaI
@@ -43,7 +45,6 @@ namespace tenis.Models
 
     public class MateriaPrimaPunto
     {
-
         public int materiaPrimaId { get; set; }
         public double punto { get; set; }
     }

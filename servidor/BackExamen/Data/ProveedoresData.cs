@@ -25,6 +25,25 @@ namespace tenis.Data
 
                     cmd.Parameters.Add(new SqlParameter("@nombreP", System.Data.SqlDbType.VarChar)).Value = pro.Nombre;
                     cmd.Parameters.Add(new SqlParameter("@telefono", System.Data.SqlDbType.VarChar)).Value = pro.Telefono;
+                    cmd.Parameters.Add(new SqlParameter("@estado", System.Data.SqlDbType.VarChar)).Value = pro.Domicilio.Estado;
+                    cmd.Parameters.Add(new SqlParameter("@municipio", System.Data.SqlDbType.VarChar)).Value = pro.Domicilio.Municipio;
+                    cmd.Parameters.Add(new SqlParameter("@codigoPostal", System.Data.SqlDbType.Int)).Value = pro.Domicilio.CodigoPostal;
+                    cmd.Parameters.Add(new SqlParameter("@colonia", System.Data.SqlDbType.VarChar)).Value = pro.Domicilio.Colonia;
+                    cmd.Parameters.Add(new SqlParameter("@calle", System.Data.SqlDbType.VarChar)).Value = pro.Domicilio.Calle;
+                    cmd.Parameters.Add(new SqlParameter("@numeroExt", System.Data.SqlDbType.Int)).Value = pro.Domicilio.NumeroExt;
+
+                    if (pro.Domicilio.NumeroInt == null || pro.Domicilio.NumeroInt == 0)
+                    {
+                        cmd.Parameters.Add(new SqlParameter("@numeroInt", System.Data.SqlDbType.Int)).Value = DBNull.Value;
+                    }
+                    else
+                    {
+                        cmd.Parameters.Add(new SqlParameter("@numeroInt", System.Data.SqlDbType.Int)).Value = pro.Domicilio.NumeroInt;
+                    }
+
+
+
+                    cmd.Parameters.Add(new SqlParameter("@referencia", System.Data.SqlDbType.VarChar)).Value = pro.Domicilio.Referencia;
                     int rowsAffected = cmd.ExecuteNonQuery();
                     // Si se realizó correctamente, devolver un código de estado 200 OK
                     return new HttpResponseMessage(HttpStatusCode.OK)
@@ -121,6 +140,19 @@ namespace tenis.Data
                                 Nombre=dr["nombreProvedor"].ToString(),
                                 Telefono = dr["telefono"].ToString(),
                                 Estatus = Convert.ToInt32(dr["estatus"]),
+                                Domicilio = new Domicilio()
+                                {
+                                    Estado = dr["estado"].ToString(),
+                                    Municipio = dr["municipio"].ToString(),
+                                    CodigoPostal = Convert.ToInt32(dr["codigoPostal"]),
+                                    Colonia = dr["colonia"].ToString(),
+                                    Calle = dr["calle"].ToString(),
+                                    NumeroExt = Convert.ToInt32(dr["numeroExt"]),
+                                    NumeroInt = dr.IsDBNull(dr.GetOrdinal("numeroInt")) ? (int?)null : dr.GetInt32(dr.GetOrdinal("numeroInt")),
+                                    Referencia = dr["referencia"].ToString(),
+
+
+                                },
 
                             };
 
@@ -181,7 +213,19 @@ namespace tenis.Data
                                 Nombre=dr["nombreProvedor"].ToString(),
                                 Telefono = dr["telefono"].ToString(),
                                 Estatus = Convert.ToInt32(dr["estatus"]),
+                                Domicilio = new Domicilio()
+                                {
+                                    Estado = dr["estado"].ToString(),
+                                    Municipio = dr["municipio"].ToString(),
+                                    CodigoPostal = Convert.ToInt32(dr["codigoPostal"]),
+                                    Colonia = dr["colonia"].ToString(),
+                                    Calle = dr["calle"].ToString(),
+                                    NumeroExt = Convert.ToInt32(dr["numeroExt"]),
+                                    NumeroInt = dr.IsDBNull(dr.GetOrdinal("numeroInt")) ? (int?)null : dr.GetInt32(dr.GetOrdinal("numeroInt")),
+                                    Referencia = dr["referencia"].ToString(),
 
+
+                                },
                             };
 
                             prove.Add(pro);

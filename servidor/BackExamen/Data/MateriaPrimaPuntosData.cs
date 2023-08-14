@@ -161,9 +161,9 @@ namespace tenis.Data
                             {
                                 materiaPrimaId =Convert.ToInt32(dr["materiaPrimaId"]),
                                 punto=Convert.ToDouble(dr["punto"]),
+                           
 
-
-                            };
+                        };
 
                             CMP.Add(mp);
                         }

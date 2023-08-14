@@ -249,10 +249,21 @@ namespace tenis.Data
                                 materiaPrimaId =Convert.ToInt32(dr["materiaPrimaId"]),
                                 cantidadCompra=Convert.ToInt32(dr["cantidadCompra"]),
                                 pagoTotal = Convert.ToDouble(dr["pagoTotal"]),
-                                fecha = Convert.ToDateTime(dr["fecha"]).ToString("dd-MM-yyyy")
+                                fecha = Convert.ToDateTime(dr["fecha"]).ToString("dd-MM-yyyy"),
+                                materiaPrima = new MateriaPrimaE()
+                                {
+                                    materiaPrimaId =Convert.ToInt32(dr["materiaPrimaId"]),
+                                    provedoresId=Convert.ToInt32(dr["proovedoresId"]),
+                                    nombreMateriaPrima = dr["nombreMateriaPrima"].ToString(),
+                                    cantidadTotal = Convert.ToInt32(dr["cantidadTotal"]),
+                                    costo = Convert.ToDouble(dr["costo"]),
+                                    image_name = dr["image_name"].ToString()
+
+                                }
 
 
-                        };
+
+                            };
 
                             CMP.Add(mp);
                         }

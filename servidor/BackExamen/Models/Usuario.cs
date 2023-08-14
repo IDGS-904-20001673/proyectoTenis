@@ -18,4 +18,9 @@
         public int? IdRole { get; set; }
         public Domicilio? Domicilio { get; set; }
     }
+
+    public class UsuarioIDDomi
+    {
+        public int IdUsuario { get; set; }
+    }
 }

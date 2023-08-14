@@ -45,7 +45,17 @@ namespace BackExamen.Controllers
 
         }
 
+        [HttpPost]
+        [Route("ConsultarDomicilioPorIdUsuario")]
+        public dynamic CONDOMIPOIDUSER([FromBody] UsuarioIDDomi id)
+        {
+            
+            
+                return LoginData.consultarDomicilio(id);
+         
 
+
+        }
 
 
 

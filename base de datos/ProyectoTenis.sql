@@ -46,7 +46,9 @@ CREATE TABLE provedores(
 	proovedoresId int NOT NULL PRIMARY KEY IDENTITY(1,1),
 	nombreProvedor varchar(255) NOT NULL,
 	telefono varchar(255) NOT NULL,
-	estatus int NOT NULL DEFAULT 1
+	estatus int NOT NULL DEFAULT 1,
+	domicilioId int NOT NULL,
+	CONSTRAINT fk_domiclio_id_proovedores FOREIGN KEY (domicilioId) REFERENCES domicilio(domicilioId)
 );
 GO
 
@@ -221,12 +223,29 @@ GO
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 CREATE PROCEDURE sp_insertar_proveedor(
     @nombreP varchar(255),
-    @telefono varchar(255)
+    @telefono varchar(255),
+
+	@estado varchar(255),
+    @municipio varchar(255),
+    @codigoPostal int,
+    @colonia varchar(255),
+    @calle varchar(255),
+    @numeroExt int,
+    @numeroInt int,
+    @referencia varchar(255)
 	)
 AS   
 BEGIN
-insert into provedores(nombreProvedor,telefono ) values(
-@nombreP, @telefono
+DECLARE @idDomicilio INT;
+
+insert into domicilio(estado, municipio, codigoPostal, colonia, calle, numeroExt, numeroInt, referencia) values(
+@estado,@municipio,@codigoPostal,@colonia, @calle,@numeroExt,@numeroInt,@referencia
+);
+
+SET @idDomicilio = SCOPE_IDENTITY();
+
+insert into provedores(nombreProvedor,telefono, domicilioId) values(
+@nombreP, @telefono,@idDomicilio
 );
 END;
 GO
@@ -264,7 +283,8 @@ GO
 CREATE PROCEDURE sp_mostar_proveedores_inactivos
 AS
 BEGIN
-select * from provedores where estatus = 0;
+select p.proovedoresId, p.nombreProvedor, p.telefono, p.estatus, domicilio.* from provedores p inner join domicilio on
+p.domicilioId = domicilio.domicilioId  where estatus = 0;
 
 END;
 GO
@@ -272,7 +292,8 @@ GO
 CREATE PROCEDURE sp_mostar_proveedores_activos
 AS
 BEGIN
-select * from provedores where estatus = 1;
+select p.proovedoresId, p.nombreProvedor, p.telefono, p.estatus, domicilio.* from provedores p inner join domicilio on
+p.domicilioId = domicilio.domicilioId  where estatus = 1;
 
 END;
 GO
@@ -340,7 +361,7 @@ AS
 BEGIN
 SELECT 
     COALESCE(compraMateriaPrima.compraMateriaPrimaId  , compraMateriaPrimaPuntos.compraMateriaPrimaPuntoId) AS compraMateriaPrimaId,
-    COALESCE(compraMateriaPrima.materiaPrimaId, compraMateriaPrimaPuntos.materiaPrimaId) AS materiaPrimaId,
+	materiaPrima.*,
     COALESCE(compraMateriaPrima.cantidadCompra, compraMateriaPrimaPuntos.cantidadCompra) AS cantidadCompra,
     COALESCE(compraMateriaPrima.pagoTotal, compraMateriaPrimaPuntos.pagoTotal) AS pagoTotal,
     COALESCE(compraMateriaPrima.fecha, compraMateriaPrimaPuntos.fecha) AS fecha
@@ -649,6 +670,17 @@ where c.idCompra=@idCompra;
 
 END;
 GO
+------------------------------------------------------------------------------------------------------------------------------------------------
+CREATE PROCEDURE sp_consultarDomicilio(
+    @idUsuario int
+	)
+AS
+BEGIN
+	select domicilio.* from domicilio inner join usuario on
+	domicilio.domicilioId = usuario.domicilioId 
+	where usuario.idUsuario =@idUsuario;
+END;
+GO
 ------------------------------------------------------------------------Ejecucion de los SP-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 EXEC sp_registrar_usuario
     @estado='Guanajuato',
@@ -667,11 +699,27 @@ GO
 
 EXEC sp_insertar_proveedor
     @nombreP='cyprus',
-    @telefono='477123873'
+    @telefono='477123873',
+	@estado='Guanajuato',
+    @municipio='Leon',
+    @codigoPostal=37190,
+    @colonia='La florida',
+    @calle='san placido',
+    @numeroExt=145,
+    @numeroInt='',
+    @referencia='Porton blanco'
 GO
 EXEC sp_insertar_proveedor
     @nombreP='toefl',
-    @telefono='4771276873'
+    @telefono='4771276873',
+	@estado='Guanajuato',
+    @municipio='Leon',
+    @codigoPostal=37190,
+    @colonia='La florida',
+    @calle='san placido',
+    @numeroExt=145,
+    @numeroInt='',
+    @referencia='Porton blanco'
 GO
 EXEC sp_nueva_materiaPrima
     @proovedoresId = 1,
