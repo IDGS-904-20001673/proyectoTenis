@@ -24,4 +24,5 @@
         public int? NumeroInt { get; set; }
         public string? Referencia { get; set; }
     }
+
 }

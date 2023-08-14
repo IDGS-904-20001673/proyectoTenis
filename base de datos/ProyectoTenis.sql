@@ -111,7 +111,34 @@ CREATE TABLE detalleMateriaProducto (
   CONSTRAINT fk_detalleMateriaProducto_materiaPrimaId FOREIGN KEY (materiaPrimaId) REFERENCES materiaPrima(materiaPrimaId)
 );
 GO
+ CREATE TABLE estatus(
+	estatus int NOT NULL PRIMARY KEY IDENTITY(1,1),
+	descripcionEstatus varchar(255) NOT NULL
+);
+GO
+CREATE TABLE compras (
+  idCompra int NOT NULL PRIMARY KEY IDENTITY(1,1),
+  fechaCompra datetime NOT NULL,
+  idUsuario int NOT NULL,
+  Total float NOT NULL,
+  CantidadTotalTenis int NOT NULL,
+  estatus int default 1,
+  domicilioId int NOT NULL,
+  CONSTRAINT fk_domiclioCompra_id FOREIGN KEY (domicilioId) REFERENCES domicilio(domicilioId),
+  CONSTRAINT fk_compras_user FOREIGN KEY (idUsuario) REFERENCES usuario(idUsuario)
+);
+GO
+CREATE TABLE detalleCompra (
+  idDetalleCompra int NOT NULL PRIMARY KEY IDENTITY(1,1),
+  idCompra int NOT NULL,
+  idDetalleProducto int NOT NULL,
+  cantidad int NOT NULL,
+  costo float NOT NULL,
+  CONSTRAINT fk_compras_idCompra FOREIGN KEY (idCompra) REFERENCES compras(idCompra),
+  CONSTRAINT fk_compras_idDetalleProducto FOREIGN KEY (idDetalleProducto) REFERENCES ProductoDetalle(ProductoDetalleID)
+);
 
+GO
 ---------------------------------------------------------------------------------------------inserciones------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 INSERT INTO roles (nombre, descripccion) VALUES
 ('Admin', 'administrador'),
@@ -133,11 +160,18 @@ VALUES
 ('Jose', 'angro1212@gmail.com', 'sha256$6j2avdMEX7UgH3HT$a9ea793320d38ead008540397c27054079389b76e12ab9b99da9568af83b5e53',1,2,2),
 ('pedro', 'LeoGuapo@gmail.com', 'sha256$ERUhmMIzpUKtOSw4$eddbb4db44c30094412ebfebdfe42db31de476ae19d75d41193bf281325048a0',1,3,3);
 
+INSERT INTO estatus (descripcionEstatus) 
+values
+	('EN ESPERA DE ELABORACION'),
+	('ELABORANDO PEDIDO'),
+	('PEDIDO ENVIADO'),
+	('PEDIDO ENTREGADO'),
+	('PEDIDO CANCELADO');
 
-
+GO
 
 -------------------------------------------------------------------------------------Store procedures-------------------------------------------------------------------------------------------------------------------------------------------------------------------
-GO
+
 CREATE PROCEDURE sp_consultar_usuario(
     @email varchar(255),
     @pass varchar(255)
@@ -500,6 +534,121 @@ BEGIN
 
 END;
 GO
+------------------------------------------------------------------------------------------------------------------------------------------
+CREATE PROCEDURE sp_mostrarComprasPuntos
+AS   
+BEGIN
+select * from compraMateriaPrimaPuntos;
+END;
+GO
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+create procedure sp_registrarCompra(
+@IdUsuario int,
+@TotalProducto int,
+@Total float,
+
+@estado varchar(255),
+@municipio varchar(255),
+@codigoPostal int,
+@colonia varchar(255),
+@calle varchar(255),
+@numeroExt int,
+@numeroInt int,
+@referencia varchar(255),
+
+
+@QueryDetalleCompra nvarchar(max)
+)
+as
+begin
+	begin try
+		begin transaction
+		
+		declare @idcompra int = 0
+		DECLARE @idDomicilio INT;
+
+		insert into domicilio(estado, municipio, codigoPostal, colonia, calle, numeroExt, numeroInt, referencia) values(
+		@estado,@municipio,@codigoPostal,@colonia, @calle,@numeroExt,@numeroInt,@referencia
+		);
+		SET @idDomicilio = SCOPE_IDENTITY();
+
+		insert into compras(fechaCompra,idUsuario,Total, CantidadTotalTenis, estatus, domicilioId) values
+		(getDate(), @IdUsuario,@Total, @TotalProducto,1,@idDomicilio)
+
+		set @idcompra = scope_identity()
+
+		set @QueryDetalleCompra = replace(@QueryDetalleCompra,'¡idcompra!',@idcompra)
+
+		EXECUTE sp_executesql @QueryDetalleCompra
+
+
+
+		commit
+	end try
+	begin catch
+		rollback
+	end catch
+end
+
+go
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+create procedure sp_CambiarEstatusCompra(
+@estatus int,
+@idCompra int
+)
+as
+begin
+	begin try
+		begin transaction
+   UPDATE compras
+    SET estatus = @estatus
+    WHERE idCompra = @idCompra;
+
+		commit
+	end try
+	begin catch
+		rollback
+	end catch
+end
+go
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+CREATE PROCEDURE sp_mostarComprasPorUsuario
+(
+  @idUsuario int
+)
+AS
+BEGIN
+    SELECT c.idCompra,c.fechaCompra,c.CantidadTotalTenis,c.idUsuario,c.Total, d.*, e.*
+  FROM compras c
+  INNER JOIN domicilio d ON c.domicilioId = d.domicilioId
+  INNER JOIN estatus e ON c.estatus = e.estatus
+  WHERE c.idUsuario =@idUsuario;
+END;
+GO
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+CREATE PROCEDURE sp_mostarDetalleCompras
+(
+  @idCompra int
+)
+AS
+BEGIN
+   SELECT
+    dc.idDetalleCompra,
+    dc.cantidad,
+    dc.costo as subtotal,
+    pd.punto,
+    p.nombre,
+    p.precio as precioUnitario,
+    p.descripccion,
+    p.image_name
+FROM detalleCompra dc
+INNER JOIN compras c ON dc.idCompra = c.idCompra
+INNER JOIN ProductoDetalle pd ON dc.idDetalleProducto = pd.ProductoDetalleID
+INNER JOIN productos p ON pd.idProducto = p.idProducto
+where c.idCompra=@idCompra;
+
+END;
+GO
 ------------------------------------------------------------------------Ejecucion de los SP-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 EXEC sp_registrar_usuario
     @estado='Guanajuato',
@@ -570,6 +719,9 @@ select * from materiaPrima;
 select * from productos;
 select * from ProductoDetalle;
 select * from detalleMateriaProducto;
+select * from estatus;
+select * from compras;
+select * from detalleCompra;
 
  
 

@@ -87,7 +87,7 @@ namespace tenis.Data
                 {
                     return new HttpResponseMessage(HttpStatusCode.InternalServerError)
                     {
-                        Content = new StringContent("Error al registrar la materia prima dile al leo:")
+                        Content = new StringContent("Error al registrar la materia prima dile al leo:"+e.Message)
                     };
                     throw;
                 }
