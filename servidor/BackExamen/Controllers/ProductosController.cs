@@ -58,5 +58,19 @@ namespace tenis.Controllers
             return ProductoData.RegistrarDetalleMateriaDelProductoPorPunto(PMDP);
 
         }
+
+        [HttpPost]
+        [Route("MostrarDetalleMateriaProductoPorPunto")]
+        public dynamic DetalleProducto([FromBody] ProductoDetalleId id)
+        {
+            return ProductoData.MostrarDetalleMateriaProductosPorPuntos(id);
+        }
+
+        [HttpPost]
+        [Route("HacerProductos")]
+        public dynamic HacerProductos([FromBody] CrearProducto CPs)
+        {
+            return ProductoData.CrearProductos(CPs);
+        }
     }
 }

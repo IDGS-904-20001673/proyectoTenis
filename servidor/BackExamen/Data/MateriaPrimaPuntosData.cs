@@ -138,5 +138,64 @@ namespace tenis.Data
             }
         }
 
+        public static dynamic MostarComprasMateriaPrimaPunto()
+        {
+
+            List<MateriaPrimaPunto> CMP = new List<MateriaPrimaPunto>();
+            using (SqlConnection oConexion = new SqlConnection(Conexion.rutaCon))
+            {
+
+                try
+                {
+                    oConexion.Open();
+
+                    SqlCommand cmd = new SqlCommand("sp_mostrarComprasPuntos", oConexion);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+
+
+                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        while (dr.Read())
+                        {
+                            MateriaPrimaPunto mp = new MateriaPrimaPunto()
+                            {
+                                materiaPrimaId =Convert.ToInt32(dr["materiaPrimaId"]),
+                                punto=Convert.ToDouble(dr["punto"]),
+
+
+                            };
+
+                            CMP.Add(mp);
+                        }
+                    }
+
+                    if (CMP.Count >0)
+                    {
+                        return CMP;
+                    }
+                    else
+                    {
+                        return new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                        {
+                            Content = new StringContent("Error en la consulta de las compras de materia prima")
+                        };
+                    }
+
+                }
+                catch (Exception e)
+                {
+                    return new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                    {
+                        Content = new StringContent("Error al consultar las compras de materia prima, ponte en contacto con el guapo" + e.Message)
+                    };
+                    throw;
+                }
+                finally
+                {
+                    oConexion.Close();
+                }
+            }
+        }
+
     }
 }

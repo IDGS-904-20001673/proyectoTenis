@@ -443,7 +443,9 @@ create PROCEDURE sp_mostrar_puntosProducto(
 	)
 AS
 BEGIN
-    SELECT * from ProductoDetalle where idProducto = @idProducto;
+    SELECT * from ProductoDetalle inner join productos on
+	productos.idProducto=ProductoDetalle.idProducto
+	where ProductoDetalle.idProducto = @idProducto;
 
 END;
 GO
@@ -469,7 +471,32 @@ CREATE PROCEDURE sp_MostrarDetalleMateriaProducto(
 AS   
 BEGIN
 
-select * from detalleMateriaProducto where ProductoDetalleID=@idProductoDetalle;
+select detalleMateriaProducto.idDetalleMateriaProducto,detalleMateriaProducto.cantidadUsoMateria, 
+materiaPrima.*, ProductoDetalle.*, productos.* from detalleMateriaProducto inner join materiaPrima on
+materiaPrima.materiaPrimaId = detalleMateriaProducto.materiaPrimaId inner join ProductoDetalle on
+ProductoDetalle.ProductoDetalleID = detalleMateriaProducto.ProductoDetalleID inner join productos on
+ProductoDetalle.idProducto = productos.idProducto
+where detalleMateriaProducto.ProductoDetalleID=@idProductoDetalle;
+
+END;
+GO
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+CREATE PROCEDURE sp_CrearProductos(
+    @ProductoDetalleID int,
+    @cantidadCrear int
+)
+AS   
+BEGIN
+
+    UPDATE ProductoDetalle
+    SET cantidad_STOCK = cantidad_STOCK + @cantidadCrear
+    WHERE ProductoDetalleID = @ProductoDetalleID;
+
+    UPDATE MP
+    SET cantidadTotal = cantidadTotal - (DMP.cantidadUsoMateria * @cantidadCrear)
+    FROM materiaPrima AS MP
+    INNER JOIN detalleMateriaProducto AS DMP ON MP.materiaPrimaId = DMP.materiaPrimaId
+    WHERE DMP.ProductoDetalleID = @ProductoDetalleID;
 
 END;
 GO
@@ -529,23 +556,22 @@ EXEC sp_productoNuevo
     @image_name='https://http2.mlstatic.com/D_NQ_NP_605573-MLM44430900575_122020-O.webp';
 GO
 
-EXEC sp_ProductoDetalle @idProducto = 1, @punto=3;
+EXEC sp_ProductoDetalle @idProducto = 1, @punto=4;
 GO
-exec sp_DetalleMateriaProducto @idProductoDetalle=1, @materiaPrimaId=1, @cantidadUsoMateria=0.05;
+exec sp_DetalleMateriaProducto @idProductoDetalle=1, @materiaPrimaId=2, @cantidadUsoMateria=0.1;
 GO
 --------------------------------------------------------------------------------------selects------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 select * from usuario; 
 select * from domicilio; 
 select * from provedores; 
-select * from materiaPrima;
 select * from compraMateriaPrima;
+
+select * from materiaPrima;
 select * from productos;
 select * from ProductoDetalle;
 select * from detalleMateriaProducto;
 
-  UPDATE materiaPrima
-    SET cantidadTotal = cantidadTotal-0.05
-    WHERE materiaPrimaId = 1;
+ 
 
 
 	EXEC sp_atualizar_usuario

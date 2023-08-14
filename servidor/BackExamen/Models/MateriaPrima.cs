@@ -40,4 +40,11 @@ namespace tenis.Models
         public int cantidadCompra { get; set; }
         public double pagoTotal { get; set; }
     }
+
+    public class MateriaPrimaPunto
+    {
+
+        public int materiaPrimaId { get; set; }
+        public double punto { get; set; }
+    }
 }

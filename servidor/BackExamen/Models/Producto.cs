@@ -23,6 +23,11 @@
         public int idProducto { get; set; }
     }
 
+    public class ProductoDetalleId
+    {
+        public int idProductoDetalle { get; set; }
+    }
+
     public class ProductoDetaPuntos
     {
         public int idProducto { get; set; }
@@ -33,7 +38,7 @@
     public class ProductoDetaPuntosIds
     {
         public int idProductoDetalle { get; set; }
-        public int idProducto { get; set; }
+        public ProductoE Producto { get; set; }
         public double punto { get; set; }
         public int cantidad { get; set; }
     }
@@ -48,10 +53,17 @@
     public class ProductoMateriaDetallePuntosID
     {
         public int idDetalleMateriaProducto { get; set; }
-        public int idProductoDetalle { get; set; }
-        public int materiaPrimaId { get; set; }
+        public ProductoDetaPuntosIds ProductoDetalle { get; set; }
+        public MateriaPrimaE materiaPrima { get; set; }
         public double cantidadUsoMateria { get; set; }
     }
+
+    public class CrearProducto
+    {
+        public int ProductoDetalleId { get; set; }
+        public int CantidadACrear { get; set; }
+    }
+
 
 
 
