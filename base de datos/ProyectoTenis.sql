@@ -694,16 +694,21 @@ GO
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-CREATE PROCEDURE sp_mostarComprasADMIN
+create PROCEDURE sp_mostarComprasADMIN
 AS
 BEGIN
     SELECT c.idCompra, c.fechaCompra, c.Total, c.CantidadTotalTenis,
-	u.nombre,u.correo, d.*, estatus.* from compras c inner join usuario u on
+	u.nombre,u.correo, d.*, e.* from compras c inner join usuario u on
 	c.idUsuario = u.idUsuario inner join domicilio d on
 	c.domicilioId = d.domicilioId inner join estatus e on
 	c.estatus = e.estatus;
 END;
 GO
+exec sp_mostarComprasADMIN;
+GO
+select * from ProductoDetalle;
+
+
 ------------------------------------------------------------------------Ejecucion de los SP-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 EXEC sp_registrar_usuario
     @estado='Guanajuato',
@@ -748,7 +753,7 @@ EXEC sp_nueva_materiaPrima
     @proovedoresId = 1,
     @nombreMateriaPrima = 'PVC',
     @costo = 517.20,
-	@image_name = 'C:\Users\roble_p4xiojp\OneDrive\Escritorio\proyecto\base de datos'
+	@image_name = 'foto.jpg'
 GO
 EXEC sp_nueva_materiaPrima
     @proovedoresId = 1,
@@ -756,6 +761,7 @@ EXEC sp_nueva_materiaPrima
     @costo = 52.20,
 	@image_name = 'C:\Users\roble_p4xiojp\OneDrive\Escritorio\proyecto\base de datos'
 GO
+select * from compraMateriaPrimaPuntos
 exec sp_comprar_materiaPrima @materiaPrimaId=1, @cantidadCompra=25, @pagoTotal=23.362;
 GO
 exec sp_comprar_materiaPrima @materiaPrimaId=1, @cantidadCompra=51, @pagoTotal=233.62;

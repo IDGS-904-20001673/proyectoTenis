@@ -21,6 +21,7 @@ namespace tenis.Data
                     foreach (DetalleCompra dc in oCompra.Detalles)
                     {
                         query.AppendLine("insert into detalleCompra(idCompra,idDetalleProducto,cantidad,costo) values (¡idcompra!," + dc.IdDetalleProducto +","+dc.Cantidad+","+dc.Costo+")");
+                        query.AppendLine("insert into detalleCompra(idCompra,idDetalleProducto,cantidad,costo) values (¡idcompra!," + dc.IdDetalleProducto +","+dc.Cantidad+","+dc.Costo+")");
                     }
 
                     oConexion.Open();

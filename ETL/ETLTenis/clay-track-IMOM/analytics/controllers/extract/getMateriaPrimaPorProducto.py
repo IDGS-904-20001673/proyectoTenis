@@ -6,7 +6,7 @@ def getMateriaPrimaPorProducto(todosLosTiempos):
         query = f"""
         SELECT
             mp.nombreMateriaPrima,
-             mp.cantidadTotal,
+            mp.cantidadTotal,
             dmp.cantidadUsoMateria,
             p.nombre AS nombreProducto,
             p.precio,
