@@ -37,5 +37,11 @@ namespace tenis.Controllers
         {
             return ComprasData.MostrarComprasDetalles(id);
         }
+        [HttpPost]
+        [Route("MostrarComprasAdmin")]
+        public dynamic MostrarCompraAdmin()
+        {
+            return ComprasData.MostrarComprasAdmin();
+        }
     }
 }

@@ -360,14 +360,24 @@ CREATE PROCEDURE sp_mostrar_comprasMateriaPrima
 AS   
 BEGIN
 SELECT 
-    COALESCE(compraMateriaPrima.compraMateriaPrimaId  , compraMateriaPrimaPuntos.compraMateriaPrimaPuntoId) AS compraMateriaPrimaId,
-	materiaPrima.*,
+    COALESCE(compraMateriaPrima.compraMateriaPrimaId, compraMateriaPrimaPuntos.compraMateriaPrimaPuntoId) AS compraMateriaPrimaId,
+    materiaPrima.*,
     COALESCE(compraMateriaPrima.cantidadCompra, compraMateriaPrimaPuntos.cantidadCompra) AS cantidadCompra,
     COALESCE(compraMateriaPrima.pagoTotal, compraMateriaPrimaPuntos.pagoTotal) AS pagoTotal,
     COALESCE(compraMateriaPrima.fecha, compraMateriaPrimaPuntos.fecha) AS fecha
 FROM materiaPrima
 LEFT JOIN compraMateriaPrima ON materiaPrima.materiaPrimaId = compraMateriaPrima.materiaPrimaId
-LEFT JOIN compraMateriaPrimaPuntos ON materiaPrima.materiaPrimaId = compraMateriaPrimaPuntos.materiaPrimaId;
+LEFT JOIN compraMateriaPrimaPuntos ON materiaPrima.materiaPrimaId = compraMateriaPrimaPuntos.materiaPrimaId
+WHERE 
+    compraMateriaPrima.compraMateriaPrimaId IS NOT NULL OR
+    compraMateriaPrimaPuntos.compraMateriaPrimaPuntoId IS NOT NULL OR
+    compraMateriaPrima.cantidadCompra IS NOT NULL OR
+    compraMateriaPrimaPuntos.cantidadCompra IS NOT NULL OR
+    compraMateriaPrima.pagoTotal IS NOT NULL OR
+    compraMateriaPrimaPuntos.pagoTotal IS NOT NULL OR
+    compraMateriaPrima.fecha IS NOT NULL OR
+    compraMateriaPrimaPuntos.fecha IS NOT NULL;
+
 END;
 GO
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -681,6 +691,19 @@ BEGIN
 	where usuario.idUsuario =@idUsuario;
 END;
 GO
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+CREATE PROCEDURE sp_mostarComprasADMIN
+AS
+BEGIN
+    SELECT c.idCompra, c.fechaCompra, c.Total, c.CantidadTotalTenis,
+	u.nombre,u.correo, d.*, estatus.* from compras c inner join usuario u on
+	c.idUsuario = u.idUsuario inner join domicilio d on
+	c.domicilioId = d.domicilioId inner join estatus e on
+	c.estatus = e.estatus;
+END;
+GO
 ------------------------------------------------------------------------Ejecucion de los SP-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 EXEC sp_registrar_usuario
     @estado='Guanajuato',
@@ -729,7 +752,7 @@ EXEC sp_nueva_materiaPrima
 GO
 EXEC sp_nueva_materiaPrima
     @proovedoresId = 1,
-    @nombreMateriaPrima = 'Suela del 5',
+    @nombreMateriaPrima = 'Suela del 2',
     @costo = 52.20,
 	@image_name = 'C:\Users\roble_p4xiojp\OneDrive\Escritorio\proyecto\base de datos'
 GO
@@ -737,7 +760,7 @@ exec sp_comprar_materiaPrima @materiaPrimaId=1, @cantidadCompra=25, @pagoTotal=2
 GO
 exec sp_comprar_materiaPrima @materiaPrimaId=1, @cantidadCompra=51, @pagoTotal=233.62;
 GO
-exec sp_comprar_materiaPrimaPunto @materiaPrimaId=2, @cantidadCompra=21, @pagoTotal=372.62, @punto=5;
+exec sp_comprar_materiaPrimaPunto @materiaPrimaId=3, @cantidadCompra=21, @pagoTotal=372.62, @punto=3;
 GO
 EXEC sp_productoNuevo
     @nombre='Tenis Dama',
@@ -785,3 +808,4 @@ select * from detalleCompra;
     @numeroInt=null,
     @referencia='';
 
+	exec sp_mostrar_comprasMateriaPrima;

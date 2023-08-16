@@ -71,4 +71,18 @@ namespace tenis.Models
     {
         public int idCompras { get; set; }
     }
+
+    public class ComprasAdmin
+    {
+        public int IdCompra { get; set; }
+        public string? fecha { get; set; }
+        public double Total { get; set; }
+        public int CantidadTotalTenis { get; set; }
+        public string? nombre { get; set; }
+        public string? correo { get; set; }
+
+        public Domicilio? Domicilio { get; set; }
+
+        public string? descripccionEstatus { get; set; }
+    }
 }

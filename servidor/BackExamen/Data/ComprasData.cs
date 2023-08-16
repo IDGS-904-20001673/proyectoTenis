@@ -282,6 +282,88 @@ namespace tenis.Data
         }
 
 
+        public static dynamic MostrarComprasAdmin()
+        {
+
+            List<ComprasAdmin> compras = new List<ComprasAdmin>();
+            using (SqlConnection oConexion = new SqlConnection(Conexion.rutaCon))
+            {
+
+                try
+                {
+                    oConexion.Open();
+
+                    SqlCommand cmd = new SqlCommand("sp_mostarComprasADMIN", oConexion);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        while (dr.Read())
+                        {
+                            ComprasAdmin MC = new ComprasAdmin()
+                            {
+                                IdCompra =Convert.ToInt32(dr["idCompra"]),
+                                fecha = Convert.ToDateTime(dr["fechaCompra"]).ToString("dd-MM-yyyy"),
+                                CantidadTotalTenis =Convert.ToInt32(dr["CantidadTotalTenis"]),
+                                Total = Convert.ToDouble(dr["Total"]),
+                                nombre = dr["nombre"].ToString(),
+                                correo = dr["correo"].ToString(),
+
+                                Domicilio = new Domicilio()
+                                {
+                                    Estado = dr["estado"].ToString(),
+                                    Municipio = dr["municipio"].ToString(),
+                                    CodigoPostal = Convert.ToInt32(dr["codigoPostal"]),
+                                    Colonia = dr["colonia"].ToString(),
+                                    Calle = dr["calle"].ToString(),
+                                    NumeroExt = Convert.ToInt32(dr["numeroExt"]),
+                                    NumeroInt = dr.IsDBNull(dr.GetOrdinal("numeroInt")) ? (int?)null : dr.GetInt32(dr.GetOrdinal("numeroInt")),
+                                    Referencia = dr["referencia"].ToString(),
+
+
+                                },
+                                descripccionEstatus = dr["descripcionEstatus"].ToString()
+
+
+
+                            };
+
+                            compras.Add(MC);
+                        }
+                    }
+                    if (compras.Count >0)
+                    {
+                        return compras;
+                    }
+                    else
+                    {
+                        return new HttpResponseMessage(HttpStatusCode.NotFound)
+                        {
+                            Content = new StringContent("Error en la consulta de las compras"),
+                            Version = new Version(1, 1),
+                            ReasonPhrase = "Not Found"
+                        };
+                    }
+
+
+
+                }
+                catch (Exception e)
+                {
+                    return e.Message; /*new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                    {
+                        Content = new StringContent("Error al consultar las compras" + e.Message)
+                    };*/
+                    throw;
+                }
+                finally
+                {
+                    oConexion.Close();
+                }
+            }
+
+        }
+
+
 
     }
 }
