@@ -9,7 +9,7 @@ def saveSalesByClient(json, month):
     params = (json, 'SalesByClient', month)
     db.executeProcedure(storedProc, params)
     db.commit()
-    print('Saved SalesByClient')
+    print('Guardadó ventas por cliente')
   except Exception as e:
     print(f"Error - saveSalesByClient: {e}")
   finally:

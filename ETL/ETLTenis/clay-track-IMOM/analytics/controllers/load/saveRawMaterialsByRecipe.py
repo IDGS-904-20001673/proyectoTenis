@@ -9,7 +9,8 @@ def saveRawMaterialsByRecipe(json, allTime):
     params = (json, 'RawMaterialsByRecipe', allTime)
     db.executeProcedure(storedProc, params)
     db.commit()
-    print('Saved RawMaterialsByRecipe ' + ('by all time' if allTime else 'by month'))
+    print('Guardado Materia Prima por producto ' + ('por todas las fechas' if allTime else 'por mes'))
+  
   except Exception as e:
     print(f"Error - saveRawMaterialsByRecipe: {e}")
   finally:

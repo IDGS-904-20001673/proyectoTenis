@@ -6,9 +6,8 @@ def filterRecipeBySale(rows):
     grouped_results = []
     for row in rows:
         result_row = {
-            'descriptionRecipe': f"{row['nombreProducto']} ({row['nombre']}) - {row['descripccion']}",
+            'descriptionRecipe': f"{row['nombreProducto']}",
             'totalRecipes': row['totalVendido'],
-            'totalProfit': row['totalVendido'] * row['precio'],
             'idCatRecipe': row['idProducto']
         }
         grouped_results.append(result_row)

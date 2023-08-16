@@ -9,7 +9,7 @@ def savePurchasesBySupplier(json, month):
     params = (json, 'PurchasesBySupplier', month)
     db.executeProcedure(storedProc, params)
     db.commit()
-    print('Saved PurchasesBySupplier')
+    print('Guardado Compras por proveedor')
   except Exception as e:
     print(f"Error - savePurchasesBySupplier: {e}")
   finally:

@@ -8,7 +8,7 @@ def fillDatabase():
   query = "DELETE FROM Graphic;"
   db.manipulate_data(query)
   db.commit()
-  print('Database restarted')
+  print('Reiniciando base de datos')
 
   moths = [5, 6, 7]
   for month in moths:

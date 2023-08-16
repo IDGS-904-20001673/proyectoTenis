@@ -9,7 +9,7 @@ def savePurchasesBySupplier(json, allTime):
     params = (json, 'PurchasesBySupplier', allTime)
     db.executeProcedure(storedProc, params)
     db.commit()
-    print('Saved PurchasesBySupplier ' + ('by all time' if allTime else 'by month'))
+    print('Guardado Compras por proveedor ' + ('por todas las fechas' if allTime else 'por mes'))
   except Exception as e:
     print(f"Error - savePurchasesBySupplier: {e}")
   finally:

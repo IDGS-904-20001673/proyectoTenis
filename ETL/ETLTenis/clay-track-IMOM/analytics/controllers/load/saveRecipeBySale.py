@@ -9,7 +9,8 @@ def saveRecipeBySale(json, allTime):
     params = (json, 'RecipesBySale', allTime)
     db.executeProcedure(storedProc, params)
     db.commit()
-    print('Saved RecipesBySale ' + ('by all time' if allTime else 'by month'))
+    print('Guardadó ventas por producto ' + ('por todas las fechas' if allTime else 'por mes'))
+  
   except Exception as e:
     print(f"Error - saveRecipeBySale: {e}")
   finally:

@@ -5,11 +5,11 @@ from fillingDatabase.fillDatabase import fillDatabase
 
 
 def main():
-  seconds = 30
+  seconds = 20
   fillDatabase()
-  print('\nStarting process\n')
+  print('\nEmpeazando proceso\n')
   while True:
-    print(f"\nExecuting code every {seconds} seconds\n")
+    print(f"\nEjecutando codigo cada {seconds} segundos\n")
     mainProcessAnalytics()
     time.sleep(seconds)
 
