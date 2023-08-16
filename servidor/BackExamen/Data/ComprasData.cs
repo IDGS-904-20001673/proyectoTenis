@@ -5,6 +5,7 @@ using System.Text;
 using System.Net;
 using tenis.Models;
 using serverTenis.Models;
+using Microsoft.VisualBasic;
 
 namespace tenis.Data
 {
@@ -21,8 +22,10 @@ namespace tenis.Data
                     foreach (DetalleCompra dc in oCompra.Detalles)
                     {
                         query.AppendLine("insert into detalleCompra(idCompra,idDetalleProducto,cantidad,costo) values (¡idcompra!," + dc.IdDetalleProducto +","+dc.Cantidad+","+dc.Costo+")");
-                        query.AppendLine("insert into detalleCompra(idCompra,idDetalleProducto,cantidad,costo) values (¡idcompra!," + dc.IdDetalleProducto +","+dc.Cantidad+","+dc.Costo+")");
-                    }
+                        query.AppendLine("update ProductoDetalle set cantidad_STOCK = cantidad_STOCK -" +dc.Cantidad+"where ProductoDetalle.ProductoDetalleID="+ dc.IdDetalleProducto);
+
+             
+             }
 
                     oConexion.Open();
 
