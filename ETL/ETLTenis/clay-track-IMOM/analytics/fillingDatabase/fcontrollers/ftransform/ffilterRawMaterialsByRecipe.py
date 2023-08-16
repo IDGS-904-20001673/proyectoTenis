@@ -10,10 +10,10 @@ def filterRawMaterialsByRecipe(rows):
         total_quantity_raw_material_used = sum(row['cantidadUsoMateria'] for row in group_list)
         first_row = group_list[0]
         result_row = {
-            'totalQuantityRawMaterialUsed': total_quantity_raw_material_used,
-            'name': first_row['nombreMateriaPrima'],
-            'quantityWarehouse': first_row['cantidadTotal'],
-            'description': first_row['nombreProducto']
+            'cantidad total usada': total_quantity_raw_material_used,
+            'nombre': first_row['nombreMateriaPrima'],
+            'cantidad total': first_row['cantidadTotal'],
+            'Producto': first_row['nombreProducto']
         }
         grouped_results.append(result_row)
     return json.dumps(grouped_results)

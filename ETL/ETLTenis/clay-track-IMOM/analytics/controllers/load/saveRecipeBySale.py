@@ -6,7 +6,7 @@ def saveRecipeBySale(json, allTime):
   try:
     db = DatabaseAnalytics()
     storedProc = "EXEC procedureGraphic @json = ?, @type = ?, @allTime = ?"
-    params = (json, 'RecipesBySale', allTime)
+    params = (json, 'ventasPorProducto', allTime)
     db.executeProcedure(storedProc, params)
     db.commit()
     print('Guardadó ventas por producto ' + ('por todas las fechas' if allTime else 'por mes'))

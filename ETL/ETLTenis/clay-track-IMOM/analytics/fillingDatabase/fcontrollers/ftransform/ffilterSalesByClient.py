@@ -11,9 +11,9 @@ def filterSalesByClient(rows):
         sales_count = len(group_list)
         first_row = group_list[0]
         result_row = {
-            'salesCount': sales_count,
-            'totalSales': total_sales,
-            'UserName': first_row['nombreUsuario']
+            'Numero ventas': sales_count,
+            'total ventas': total_sales,
+            'Nombre': first_row['nombreUsuario']
         }
         grouped_results.append(result_row)
     return json.dumps(grouped_results)

@@ -704,9 +704,6 @@ BEGIN
 	c.estatus = e.estatus;
 END;
 GO
-exec sp_mostarComprasADMIN;
-GO
-select * from ProductoDetalle;
 
 
 ------------------------------------------------------------------------Ejecucion de los SP-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -766,7 +763,7 @@ exec sp_comprar_materiaPrima @materiaPrimaId=1, @cantidadCompra=25, @pagoTotal=2
 GO
 exec sp_comprar_materiaPrima @materiaPrimaId=1, @cantidadCompra=51, @pagoTotal=233.62;
 GO
-exec sp_comprar_materiaPrimaPunto @materiaPrimaId=3, @cantidadCompra=21, @pagoTotal=372.62, @punto=3;
+exec sp_comprar_materiaPrimaPunto @materiaPrimaId=2, @cantidadCompra=21, @pagoTotal=372.62, @punto=2;
 GO
 EXEC sp_productoNuevo
     @nombre='Tenis Dama',
@@ -791,7 +788,7 @@ select * from usuario;
 select * from domicilio; 
 select * from provedores; 
 select * from compraMateriaPrima;
-
+select * from compraMateriaPrimaPuntos;
 select * from materiaPrima;
 select * from productos;
 select * from ProductoDetalle;
@@ -800,18 +797,4 @@ select * from estatus;
 select * from compras;
 select * from detalleCompra;
 
- 
-
-
-	EXEC sp_atualizar_usuario
-    @idUsuario=1,
-    @estado='sinaloa',
-    @municipio='Mazatlan',
-    @codigoPostal=null,
-    @colonia='',
-    @calle='',
-    @numeroExt=null,
-    @numeroInt=null,
-    @referencia='';
-
-	exec sp_mostrar_comprasMateriaPrima;
+exec sp_mostrar_comprasMateriaPrima;

@@ -105,10 +105,20 @@ END;
 GO
 
 
+
+
+
+SELECT
+   result
+ FROM Graphic
+ WHERE type = 'comprasPorProveedor'
+ AND date >= DATEADD(DAY, -30, GETDATE());
+
+
  SELECT
   result
  FROM Graphic
- WHERE type = 'RawMaterialsByRecipe'
+ WHERE type = 'ventasPorCliente'
  AND YEAR(date) = YEAR('2023-06-08')
 AND MONTH(date) = MONTH('2023-06-08');
 
@@ -116,5 +126,35 @@ AND MONTH(date) = MONTH('2023-06-08');
 SELECT
    result
  FROM Graphic
- WHERE type = 'RawMaterialsByRecipe'
+ WHERE type = 'ventasPorCliente'
+ AND date >= DATEADD(DAY, -30, GETDATE());
+
+
+ SELECT
+  result
+ FROM Graphic
+ WHERE type = 'ventasPorProducto'
+ AND YEAR(date) = YEAR('2023-06-08')
+AND MONTH(date) = MONTH('2023-06-08');
+
+
+SELECT
+   result
+ FROM Graphic
+ WHERE type = 'ventasPorProducto'
+ AND date >= DATEADD(DAY, -30, GETDATE());
+
+
+ SELECT
+  result
+ FROM Graphic
+ WHERE type = 'MateriaPrimaPorProducto'
+ AND YEAR(date) = YEAR('2023-06-08')
+AND MONTH(date) = MONTH('2023-06-08');
+
+
+SELECT
+   result
+ FROM Graphic
+ WHERE type = 'MateriaPrimaPorProducto'
  AND date >= DATEADD(DAY, -30, GETDATE());

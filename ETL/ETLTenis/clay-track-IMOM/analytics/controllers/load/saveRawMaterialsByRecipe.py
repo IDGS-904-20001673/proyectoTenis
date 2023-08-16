@@ -6,7 +6,7 @@ def saveRawMaterialsByRecipe(json, allTime):
   try:
     db = DatabaseAnalytics()
     storedProc = "EXEC procedureGraphic @json = ?, @type = ?, @allTime = ?"
-    params = (json, 'RawMaterialsByRecipe', allTime)
+    params = (json, 'MateriaPrimaPorProducto', allTime)
     db.executeProcedure(storedProc, params)
     db.commit()
     print('Guardado Materia Prima por producto ' + ('por todas las fechas' if allTime else 'por mes'))

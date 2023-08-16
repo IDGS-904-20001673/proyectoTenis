@@ -6,7 +6,7 @@ def savePurchasesBySupplier(json, month):
   try:
     db = DatabaseAnalytics()
     storedProc = "EXEC procedureGraphicFilling @json = ?, @type = ?, @month = ?"
-    params = (json, 'PurchasesBySupplier', month)
+    params = (json, 'comprasPorProveedor', month)
     db.executeProcedure(storedProc, params)
     db.commit()
     print('Guardado Compras por proveedor')
