@@ -58,7 +58,10 @@ namespace serverTenis.Data
 
                     if (usuarios.Count >0)
                     {
-                        return usuarios;
+                        return new HttpResponseMessage(HttpStatusCode.OK)
+                        {
+                            Content = new StringContent("Inicio de sesion Correcto")
+                        };
                     }
                     else {
                         return new HttpResponseMessage(HttpStatusCode.NotFound)
