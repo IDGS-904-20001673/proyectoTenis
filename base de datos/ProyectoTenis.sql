@@ -765,24 +765,10 @@ exec sp_comprar_materiaPrima @materiaPrimaId=1, @cantidadCompra=51, @pagoTotal=2
 GO
 exec sp_comprar_materiaPrimaPunto @materiaPrimaId=2, @cantidadCompra=21, @pagoTotal=372.62, @punto=2;
 GO
-EXEC sp_productoNuevo
-    @nombre='Tenis Dama',
-    @precio=500,
-    @descripccion='zapato bonito para dama',
-    @image_name='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSVr0o0FVrzqLrAQa-ivchzoLiZjksjphqopA&usqp=CAU';
+
 GO
 
-EXEC sp_productoNuevo
-    @nombre='Tenis Bato',
-    @precio=500,
-    @descripccion='zapato bonito para bato',
-    @image_name='https://http2.mlstatic.com/D_NQ_NP_605573-MLM44430900575_122020-O.webp';
-GO
 
-EXEC sp_ProductoDetalle @idProducto = 1, @punto=4;
-GO
-exec sp_DetalleMateriaProducto @idProductoDetalle=1, @materiaPrimaId=2, @cantidadUsoMateria=0.1;
-GO
 --------------------------------------------------------------------------------------selects------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 select * from usuario; 
 select * from domicilio; 
@@ -798,3 +784,108 @@ select * from compras;
 select * from detalleCompra;
 
 exec sp_mostrar_comprasMateriaPrima;
+
+
+
+EXEC sp_productoNuevo
+    @nombre='Tenis De mujer',
+    @precio=350,
+    @descripccion='Tenis de dama Rosa bonito',
+    @image_name='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSVr0o0FVrzqLrAQa-ivchzoLiZjksjphqopA&usqp=CAU';
+
+GO
+
+EXEC sp_ProductoDetalle @idProducto = 1, @punto=4;
+GO
+exec sp_DetalleMateriaProducto @idProductoDetalle=1, @materiaPrimaId=2, @cantidadUsoMateria=0.1;
+GO
+
+
+
+EXEC sp_productoNuevo
+    @nombre='Tenis Calcetin sport',
+    @precio=238,
+    @descripccion='Tenis unisex rojo',
+    @image_name='https://http2.mlstatic.com/D_NQ_NP_605573-MLM44430900575_122020-O.webp';
+GO
+EXEC sp_ProductoDetalle @idProducto = 2, @punto=4;
+GO
+
+	EXEC sp_productoNuevo
+    @nombre='Tenis calcetin alto',
+    @precio=1234,
+    @descripccion='calcetin rosa alto para dama',
+    @image_name='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSDJU8NN6RshR_jXpXgD4KhDe8oul-9_tcHw&usqp=CAU';
+	GO
+EXEC sp_ProductoDetalle @idProducto = 3, @punto=4;
+GO
+
+		EXEC sp_productoNuevo
+    @nombre='Calcetín sport palace',
+    @precio=2300,
+    @descripccion='calcetin negro para dama',
+    @image_name='https://sufavorita.com/cdn/shop/products/0911ti5ngro_3__clipped_rev_1_1024x1024.jpg?v=1643412245';
+
+GO
+EXEC sp_ProductoDetalle @idProducto = 4, @punto=4;
+GO
+
+	EXEC sp_productoNuevo
+    @nombre='Calcetín Invierno',
+    @precio=3289,
+    @descripccion='calcetin para invierno con borrega',
+    @image_name='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3q3mMn4y9i6RpKBpgJG5ilDaqRBmuYmCukw&usqp=CAU';
+
+GO
+EXEC sp_ProductoDetalle @idProducto = 5, @punto=4;
+GO
+		EXEC sp_productoNuevo
+    @nombre='Calcetín Niña',
+    @precio=250,
+    @descripccion='calcetin rosa para niña',
+    @image_name='https://sufavorita.com/cdn/shop/products/6001KI17ROSATEXTIL_4__clipped_rev_1_1024x1024.jpg?v=1666812084';
+
+	GO
+EXEC sp_ProductoDetalle @idProducto = 6, @punto=4;
+GO
+		EXEC sp_productoNuevo
+    @nombre='Calcetín choclo',
+    @precio=730,
+    @descripccion='calcetin corto tipo choclo negro',
+    @image_name='https://http2.mlstatic.com/D_NQ_NP_691685-MLM51806034853_102022-O.webp';
+GO
+EXEC sp_ProductoDetalle @idProducto = 7, @punto=4;
+GO
+
+
+		EXEC sp_productoNuevo
+    @nombre='Calcetín Calvin Klein',
+    @precio=2200,
+    @descripccion='calcetin alto negro, marca calvin klein',
+    @image_name='https://m.media-amazon.com/images/I/616WykBudkL._AC_SL1500_.jpg';
+
+	GO
+EXEC sp_ProductoDetalle @idProducto = 8, @punto=4;
+GO
+
+
+		EXEC sp_productoNuevo
+    @nombre='Calcetín con agujetas',
+    @precio=1200,
+    @descripccion='calcetin con agujetas blanco',
+    @image_name='https://http2.mlstatic.com/D_NQ_NP_982167-MLM49063736137_022022-O.webp';
+
+	GO
+EXEC sp_ProductoDetalle @idProducto = 9, @punto=4;
+GO
+
+
+		EXEC sp_productoNuevo
+    @nombre='Calcetín para Bebe',
+    @precio=400,
+    @descripccion='calcetin negro para bebe',
+    @image_name='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSWpJH2UFNsrCjhZZ2BcpIpQ1mcnlxXTh1iAg&usqp=CAU';
+
+	GO
+EXEC sp_ProductoDetalle @idProducto = 10, @punto=4;
+GO
