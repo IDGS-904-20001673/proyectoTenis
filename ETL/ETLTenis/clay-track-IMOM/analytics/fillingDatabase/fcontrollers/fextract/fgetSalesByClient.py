@@ -24,7 +24,6 @@ def getSalesByClient(month):
             ON c.idUsuario = u.idUsuario
         INNER JOIN domicilio d
             ON c.domicilioId = d.domicilioId
-                WHERE MONTH(c.fechaCompra) = {month}
         """
         resultados = db.execute_query(query)
         lista_resultados = []

@@ -9,7 +9,7 @@ EXEC sp_registrar_usuario
     @numeroExt=123,
     @numeroInt=0,
     @referencia='Edificio Amarillo',
-    @nombre='María García',
+    @nombre='Maria Garcia',
     @correo='maria@example.com',
     @contrasenia='maria123',
     @idRole=3;
@@ -24,7 +24,7 @@ EXEC sp_registrar_usuario
     @numeroExt=987,
     @numeroInt=0,
     @referencia='Cerca del parque',
-    @nombre='Alejandro Pérez',
+    @nombre='Alejandro Perez',
     @correo='alejandro@example.com',
     @contrasenia='alejandro456',
     @idRole=3;
@@ -34,12 +34,12 @@ EXEC sp_registrar_usuario
     @estado='Puebla',
     @municipio='Puebla',
     @codigoPostal=72000,
-    @colonia='Las Ánimas',
+    @colonia='Las Animas',
     @calle='Av. Reforma',
     @numeroExt=456,
     @numeroInt=0,
     @referencia='Frente al cine',
-    @nombre='Ana Martínez',
+    @nombre='Ana Martinez',
     @correo='ana@example.com',
     @contrasenia='ana789',
     @idRole=3;
@@ -54,7 +54,7 @@ EXEC sp_registrar_usuario
     @numeroExt=234,
     @numeroInt=0,
     @referencia='Frente al mar',
-    @nombre='Carolina López',
+    @nombre='Carolina Lopez',
     @correo='carolina@example.com',
     @contrasenia='carolina789',
     @idRole=3;
@@ -69,7 +69,7 @@ EXEC sp_registrar_usuario
     @numeroExt=567,
     @numeroInt=0,
     @referencia='Esquina con Hidalgo',
-    @nombre='Pedro Ramírez',
+    @nombre='Pedro Ramirez',
     @correo='pedro@example.com',
     @contrasenia='pedro456',
     @idRole=3;
@@ -99,7 +99,7 @@ EXEC sp_registrar_usuario
     @numeroExt=1234,
     @numeroInt=324,
     @referencia='Frente a la playa',
-    @nombre='Ricardo Pérez',
+    @nombre='Ricardo Perez',
     @correo='ricardo@example.com',
     @contrasenia='ricardo789',
     @idRole=3;
@@ -114,7 +114,7 @@ EXEC sp_registrar_usuario
     @numeroExt=4567,
     @numeroInt=213,
     @referencia='Cerca del parque',
-    @nombre='Laura González',
+    @nombre='Laura Gonzalez',
     @correo='laura@example.com',
     @contrasenia='laura101',
     @idRole=3;

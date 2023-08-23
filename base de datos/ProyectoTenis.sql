@@ -889,3 +889,26 @@ GO
 	GO
 EXEC sp_ProductoDetalle @idProducto = 10, @punto=4;
 GO
+
+
+
+  SELECT 
+            c.idCompra,
+            c.fechaCompra,
+            c.Total,
+            c.CantidadTotalTenis,
+            u.idUsuario,
+            u.nombre AS nombreUsuario,
+            d.estado,
+            d.municipio,
+            d.codigoPostal,
+            d.colonia,
+            d.calle,
+            d.numeroExt,
+            d.numeroInt,
+            d.referencia
+        FROM compras c
+        INNER JOIN usuario u
+            ON c.idUsuario = u.idUsuario
+        INNER JOIN domicilio d
+            ON c.domicilioId = d.domicilioId

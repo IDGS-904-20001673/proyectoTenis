@@ -24,8 +24,7 @@ def getVentasPorCliente(todosLosTiempos):
             ON c.idUsuario = u.idUsuario
         INNER JOIN domicilio d
             ON c.domicilioId = d.domicilioId
-        {'' if todosLosTiempos
-            else 'WHERE c.fechaCompra >= DATEADD(DAY, -30, GETDATE())'}
+
         """
         resultados = db.execute_query(query)
         lista_resultados = []

@@ -21,7 +21,7 @@ CREATE TABLE Graphic(
   type VARCHAR(MAX) NOT NULL
 );
 GO
-select * from Graphic;
+
 
 DROP PROCEDURE IF EXISTS procedureGraphic;
 GO
@@ -112,7 +112,8 @@ SELECT
    result
  FROM Graphic
  WHERE type = 'comprasPorProveedor'
- AND date >= DATEADD(DAY, -30, GETDATE());
+ AND YEAR(date) = YEAR('2023-06-08')
+AND MONTH(date) = MONTH('2023-08-08');
 
 
  SELECT
@@ -123,38 +124,20 @@ SELECT
 AND MONTH(date) = MONTH('2023-06-08');
 
 
-SELECT
-   result
- FROM Graphic
- WHERE type = 'ventasPorCliente'
- AND date >= DATEADD(DAY, -30, GETDATE());
-
 
  SELECT
   result
  FROM Graphic
  WHERE type = 'ventasPorProducto'
  AND YEAR(date) = YEAR('2023-06-08')
-AND MONTH(date) = MONTH('2023-06-08');
+AND MONTH(date) = MONTH('2023-08-08');
 
 
-SELECT
-   result
- FROM Graphic
- WHERE type = 'ventasPorProducto'
- AND date >= DATEADD(DAY, -30, GETDATE());
+
+SELECT result FROM Graphic 
+WHERE type = 'ventasPorCliente'
+AND YEAR(date) = 2023 
+AND MONTH(date) = 6
 
 
- SELECT
-  result
- FROM Graphic
- WHERE type = 'MateriaPrimaPorProducto'
- AND YEAR(date) = YEAR('2023-06-08')
-AND MONTH(date) = MONTH('2023-06-08');
-
-
-SELECT
-   result
- FROM Graphic
- WHERE type = 'MateriaPrimaPorProducto'
- AND date >= DATEADD(DAY, -30, GETDATE());
+ select * from Graphic;
